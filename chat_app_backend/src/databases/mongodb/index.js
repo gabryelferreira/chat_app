@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
-const mongoUser = "aeae";
-const mongoPassword = "aeae";
+const mongoUser = process.env.MONGO_USER;
+const mongoPassword = process.env.MONGO_PASS;
 
 const mongoUri = `mongodb+srv://${mongoUser}:${mongoPassword}@cluster0-hbf1g.mongodb.net/chat_app?retryWrites=true&w=majority`;
 const mongoUriLocal = 'mongodb://localhost:27017/nutring';

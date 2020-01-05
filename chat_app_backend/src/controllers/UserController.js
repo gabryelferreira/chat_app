@@ -34,11 +34,8 @@ class UserController {
                     errorMessage: "Nome de usuario ja cadastrado",
                 })
             }
-            console.log("user = ", user);
             await UserRepository.create(user);
-            console.log("user created");
             const newUser = await UserRepository.findByUsername(user.username);
-            console.log("newUSER = " ,newUser);
             const token = generateJwtToken(newUser);
             user.password = undefined;
             return res.json({
@@ -61,10 +58,7 @@ class UserController {
             if (!username || !password) {
                 return res.json({ error: true, errorMessage: "Campos invalidos." })
             }
-            console.log("username = ", username);
-            console.log("password = ", password);
             const user = await UserRepository.findByUsername(username);
-            console.log("user = ", user);
             if (!user){
                 return res.json({ error: true, errorMessage: "Usuário ou senha inválidos" });
             }
