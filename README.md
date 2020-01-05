@@ -9,7 +9,8 @@ To run the project in your local machine, you first need to setup some stuffs:
 
 - Flutter in your path;
 - node/npm;
-- Create a cluster in MongoDB Atlas and change the file `src/databases/mongodb/index.js` to your database credentials.
+- Create a cluster in MongoDB Atlas and change the `chat_app_backend/src/databases/mongodb/index.js` file to your database credentials.
+- In the `chat_app/lib/src/utils/my_urls.dart` file, you will probably need to change the serverUrl to your ethernet adapter + server port (in this case, if you didnt change, 8081). You can find it in Windows opening the CMD and typing `ipconfig`. Its probably the first IPv4 address. The final result will be something like `http://192.168.0.17:8081`.
 
 ## Running the project
 
