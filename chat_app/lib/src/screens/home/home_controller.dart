@@ -70,7 +70,7 @@ class HomeController extends StateControl {
       Map<String, dynamic> json = data;
       Chat chat = Chat.fromJson(json);
       int chatIndex = chats.indexWhere((_chat) => _chat.id == chat.id);
-      List<Chat> newChats = chats;
+      List<Chat> newChats = new List<Chat>.from(chats);
       if (chatIndex > -1) {
         newChats[chatIndex].messages = chat.messages;
       } else {
