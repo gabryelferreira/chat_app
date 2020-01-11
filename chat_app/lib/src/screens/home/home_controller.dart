@@ -59,7 +59,8 @@ class HomeController extends StateControl {
 
   void onMessage() async {
     socket.on("message", (dynamic data) async {
-      Map<String, dynamic> json = data;
+      print("data = $data");
+      Map<String, dynamic> json = jsonDecode(data);
       Chat chat = Chat.fromJson(json);
       int chatIndex = _chats.indexWhere((_chat) => _chat.id == chat.id);
       if (chatIndex > -1) {
