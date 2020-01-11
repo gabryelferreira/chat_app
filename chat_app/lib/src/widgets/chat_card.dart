@@ -129,12 +129,14 @@ class ChatCard extends StatelessWidget {
   }
 
   String messageDate(int milliseconds) {
-    print("milliseconds $milliseconds");
     DateTime date = new DateTime.fromMillisecondsSinceEpoch(milliseconds);
     return format.format(date);
   }
 
   int _numberOfUnreadMessagesByMe() {
+    // chat.messages.forEach((message) {
+    //   print("message.unreadByMe ${message.unreadByMe}");
+    // });
     return chat.messages.where((message) => message.unreadByMe).length;
   }
 

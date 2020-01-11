@@ -28,9 +28,11 @@ class ChatsProvider with ChangeNotifier {
 
   setSelectedChat(Chat selectedChat) {
     _selectedChat = selectedChat;
-    _readSelectedChatMessages();
-    _chatRepository.readChat(_selectedChat.id);
-    notifyListeners();
+    if (selectedChat != null) {
+      _readSelectedChatMessages();
+      _chatRepository.readChat(_selectedChat.id);
+      notifyListeners();
+    }
   }
 
   _readSelectedChatMessages() {

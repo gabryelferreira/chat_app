@@ -51,8 +51,6 @@ class LoginController extends StateControl {
     if (loginResponse is CustomError) {
       showAlertDialog(loginResponse.errorMessage);
     } else if (loginResponse is User) {
-      print("loginresponse.id ${loginResponse.id}");
-      print("loginResponse.toString(), ${loginResponse.toString()}");
       Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
     }
     _formSubmitting = false;

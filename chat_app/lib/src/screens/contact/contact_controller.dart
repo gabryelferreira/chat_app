@@ -46,7 +46,6 @@ class ContactController extends StateControl {
       unreadByMe: false,
       unreadByOtherUser: true,
     );
-    print(DateTime.now().millisecondsSinceEpoch);
     addMessage(message);
   }
 
@@ -57,5 +56,6 @@ class ContactController extends StateControl {
   void dispose() {
     super.dispose();
     textController.dispose();
+    _chatsProvider.setSelectedChat(null);
   }
 }

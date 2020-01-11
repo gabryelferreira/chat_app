@@ -66,13 +66,13 @@ class HomeController extends StateControl {
 
   void onMessage() async {
     socket.on("message", (dynamic data) async {
-      print("data = $data");
       Map<String, dynamic> json = data;
       Chat chat = Chat.fromJson(json);
       int chatIndex = chats.indexWhere((_chat) => _chat.id == chat.id);
       List<Chat> newChats = new List<Chat>.from(chats);
       if (chatIndex > -1) {
         newChats[chatIndex].messages = chat.messages;
+        newChats[chatIndex] = await newChats[chatIndex].formatChat();
       } else {
         newChats.add(await chat.formatChat());
       }
@@ -99,7 +99,6 @@ class HomeController extends StateControl {
     }
     if (chatResponse is List<Chat>) {
       List<Chat> chats = await formatChats(chatResponse);
-      print("chats = $chats");
       _chatsProvider.setChats(chats);
     }
     
@@ -112,7 +111,6 @@ class HomeController extends StateControl {
   }
 
   int calculateChatsWithMessages() {
-    print("chamando ${chats.where((chat) => chat.messages.length > 0).length}");
     return chats.where((chat) => chat.messages.length > 0).length;
   }
 
