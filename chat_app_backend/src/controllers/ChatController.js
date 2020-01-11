@@ -40,13 +40,17 @@ class ChatController {
         }
     }
     async getChats(req, res) {
+        console.log("entrei aqui no getChats");
         try {
             const myId = req._id;
+            console.log("myId", myId);
             const chats = await ChatRepository.getUserChats(myId);
+            console.log("peguei os chats", chats);
             return res.json({
                 chats
             });
         } catch (err) {
+            console.error(err);
             return res.json({
                 error: true,
                 errorMessage: err
