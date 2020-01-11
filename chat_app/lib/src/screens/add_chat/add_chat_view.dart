@@ -28,15 +28,13 @@ class _AddChatScreenState extends State<AddChatScreen> {
         builder: (context, snapshot) {
           return Scaffold(
             appBar: CupertinoNavigationBar(
-              actionsForegroundColor: Colors.white,
               middle: Text(
                 'Usuarios',
                 style: TextStyle(
-                  color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              backgroundColor: Theme.of(context).primaryColor,
+              backgroundColor: Color(0xFFF8F8F8),
             ),
             body: SafeArea(
               child: Container(

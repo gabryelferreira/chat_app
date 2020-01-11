@@ -63,19 +63,18 @@ class _HomeScreenState extends State<HomeScreen> {
               CupertinoSliverNavigationBar(
                 largeTitle: Text(
                   'Chats',
-                  style: TextStyle(color: Colors.white),
                 ),
                 trailing: Material(
                   color: Colors.transparent,
                   child: IconButton(
                     icon: Icon(
                       Icons.exit_to_app,
-                      color: Colors.white,
+                      color: Theme.of(context).primaryColor,
                     ),
                     onPressed: _homeController.logout,
                   ),
                 ),
-                backgroundColor: Theme.of(context).primaryColor,
+                backgroundColor: Color(0xFFF8F8F8),
               ),
               usersList(context),
             ],
@@ -136,9 +135,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: <Widget>[
                     ChatCard(
                       chat: chat,
-                    ),
-                    SizedBox(
-                      height: 5,
                     ),
                   ],
                 );
