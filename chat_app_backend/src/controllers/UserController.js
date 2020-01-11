@@ -79,6 +79,21 @@ class UserController {
         }
     }
 
+    async getUsers(req, res) {
+        try {
+            const myId = req._id;
+            const users = await UserRepository.getUsersWhereNot(myId);
+            return res.json({
+                users
+            });
+        } catch (err) {
+            return res.json({
+                error: true,
+                errorMessage: err
+            })
+        }
+    }
+
 
 }
 

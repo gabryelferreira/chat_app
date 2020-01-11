@@ -1,4 +1,5 @@
 import 'package:chat_app/src/screens/home/home_controller.dart';
+import 'package:chat_app/src/widgets/chat_card.dart';
 import 'package:chat_app/src/widgets/user_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -28,18 +29,37 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Object>(
-        stream: _homeController.streamController.stream,
-        builder: (context, snapshot) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(
-                'Usuarios on-line',
-                style: TextStyle(
-                  color: Colors.white,
+      stream: _homeController.streamController.stream,
+      builder: (context, snapshot) {
+        return Scaffold(
+          // appBar: AppBar(
+          //   title: Text(
+          //     'Usuarios on-line',
+          //     style: TextStyle(
+          //       color: Colors.white,
+          //     ),
+          //   ),
+          //   actions: [
+          //     Material(
+          //       color: Colors.transparent,
+          //       child: IconButton(
+          //         icon: Icon(
+          //           Icons.exit_to_app,
+          //           color: Colors.white,
+          //         ),
+          //         onPressed: _homeController.logout,
+          //       ),
+          //     ),
+          //   ],
+          // ),
+          body: CustomScrollView(
+            slivers: <Widget>[
+              CupertinoSliverNavigationBar(
+                largeTitle: Text(
+                  'Chats',
+                  style: TextStyle(color: Colors.white),
                 ),
-              ),
-              actions: [
-                Material(
+                trailing: Material(
                   color: Colors.transparent,
                   child: IconButton(
                     icon: Icon(
@@ -49,46 +69,66 @@ class _HomeScreenState extends State<HomeScreen> {
                     onPressed: _homeController.logout,
                   ),
                 ),
-              ],
-            ),
-            body: SafeArea(
-              child: ListView(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.all(15),
-                    child: Container(
-                      child: usersList(context),
-                    ),
-                  ),
-                ],
+                backgroundColor: Theme.of(context).primaryColor,
               ),
-            ),
-          );
-        });
+              SliverFillRemaining(
+                child: usersList(context),
+              ),
+            ],
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: _homeController.openAddChatScreen,
+            child: Icon(Icons.add),
+          ),
+        );
+      },
+    );
   }
 
   Widget usersList(BuildContext context) {
-    if (_homeController.users.length == 0) {
-      return Material(
-        child: Align(
-          alignment: Alignment.center,
-          child: Text('Nenhum usuario on-line.'),
-        ),
+    if (_homeController.loading) {
+      return Center(
+        child: CupertinoActivityIndicator(),
       );
     }
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: _homeController.users.map((user) {
-          return Column(
-            children: <Widget>[
-              UserCard(
-                user: user,
-              ),
-              SizedBox(
-                height: 5,
-              ),
-            ],
-          );
-        }).toList());
+    if (_homeController.error) {
+      return Center(
+        child: Text('Ocorreu um erro ao buscar suas conversas.'),
+      );
+    }
+    if (_homeController.chats.length == 0) {
+      return Center(
+        child: Text('Voce nao possui conversas.'),
+      );
+    }
+    bool theresChatsWithMessages = _homeController.chats.where((chat) {
+          return chat.messages.length > 0;
+        }).length >
+        0;
+    if (!theresChatsWithMessages) {
+      return Center(
+        child: Text('Voce nao possui conversas.'),
+      );
+    }
+    return ListView(
+      padding: EdgeInsets.symmetric(
+        vertical: 10,
+      ),
+      children: _homeController.chats.map((chat) {
+        if (chat.messages.length == 0) {
+          return Container(height: 0, width: 0);
+        }
+        return Column(
+          children: <Widget>[
+            ChatCard(
+              chat: chat,
+            ),
+            SizedBox(
+              height: 5,
+            ),
+          ],
+        );
+      }).toList(),
+    );
   }
 }

@@ -1,20 +1,19 @@
 import 'dart:async';
 
 import 'package:chat_app/src/data/models/custom_error.dart';
-import 'package:chat_app/src/data/models/user_with_token.dart';
+import 'package:chat_app/src/data/models/user.dart';
 import 'package:chat_app/src/data/repositories/register_repository.dart';
 import 'package:chat_app/src/screens/home/home_view.dart';
 import 'package:chat_app/src/utils/custom_shared_preferences.dart';
+import 'package:chat_app/src/utils/state_control.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class RegisterController {
+class RegisterController extends StateControl {
 
   final BuildContext context;
 
   RegisterRepository _registerRepository = RegisterRepository();
-
-  StreamController<String> streamController = StreamController();
 
   TextEditingController nameController = TextEditingController();
   TextEditingController usernameController = TextEditingController();
@@ -61,17 +60,13 @@ class RegisterController {
     var loginResponse = await _registerRepository.register(name, username, password);
     if (loginResponse is CustomError) {
       showAlertDialog(loginResponse.errorMessage);
-    } else if (loginResponse is UserWithToken) {
+    } else if (loginResponse is User) {
       await CustomSharedPreferences.setString('token', loginResponse.token);
-      await CustomSharedPreferences.setString('user', loginResponse.user.toString());
+      await CustomSharedPreferences.setString('user', loginResponse.toString());
       Navigator.of(context).pushNamedAndRemoveUntil(HomeScreen.routeName, (_) => false);
     }
     _formSubmitting = false;
     notifyListeners();
-  }
-
-  void notifyListeners() {
-    streamController.add("change");
   }
 
   showAlertDialog(String message) {
@@ -99,11 +94,12 @@ class RegisterController {
     );
   }
 
+  @override
   void dispose() {
+    super.dispose();
     nameController.dispose();
     usernameController.dispose();
     passwordController.dispose();
-    streamController.close();
   }
 
 }

@@ -1,17 +1,16 @@
 import 'dart:convert';
 
 import 'package:chat_app/src/data/models/custom_error.dart';
-import 'package:chat_app/src/data/models/user_with_token.dart';
+import 'package:chat_app/src/data/models/user.dart';
 import 'package:chat_app/src/utils/custom_http_client.dart';
 import 'package:chat_app/src/utils/my_urls.dart';
 
 class LoginRepository {
-
   CustomHttpClient http = CustomHttpClient();
 
   Future<dynamic> login(String username, String password) async {
     try {
-      var body = jsonEncode({ 'username': username, 'password': password });
+      var body = jsonEncode({'username': username, 'password': password});
       var response = await http.post(
         '${MyUrls.serverUrl}/auth',
         body: body,
@@ -22,7 +21,7 @@ class LoginRepository {
         return CustomError.fromJson(loginResponse);
       }
 
-      final UserWithToken user = UserWithToken.fromJson(loginResponse);
+      final User user = User.fromJson(loginResponse);
       return user;
     } catch (err) {
       return CustomError(

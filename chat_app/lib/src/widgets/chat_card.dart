@@ -1,13 +1,18 @@
+import 'dart:convert';
+
+import 'package:chat_app/src/data/models/chat.dart';
 import 'package:chat_app/src/data/models/user.dart';
+import 'package:chat_app/src/screens/contact/contact_view.dart';
+import 'package:chat_app/src/utils/custom_shared_preferences.dart';
 import 'package:flutter/material.dart';
 
-class UserCard extends StatelessWidget {
-  final User user;
-  final Function onTap;
+class ChatCard extends StatelessWidget {
+  final Chat chat;
 
-  UserCard({
-    @required this.user,
-    this.onTap,
+  String myId;
+
+  ChatCard({
+    @required this.chat,
   });
 
   @override
@@ -15,9 +20,8 @@ class UserCard extends StatelessWidget {
     return Container(
       child: InkWell(
         onTap: () {
-          if (this.onTap != null) {
-            this.onTap(user);
-          }
+          Navigator.of(context)
+              .pushNamed('/contact', arguments: ContactScreen(chat: chat));
         },
         child: Padding(
           padding: EdgeInsets.only(
@@ -37,7 +41,6 @@ class UserCard extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.only(
                       left: 15,
-                      top: 5,
                       bottom: 5,
                     ),
                     child: Container(
@@ -45,18 +48,22 @@ class UserCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
                           Text(
-                            this.user.name,
+                            chat.otherUser.name,
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
+                          SizedBox(
+                            height: 2,
+                          ),
                           Text(
-                            '@${this.user.username}',
+                            chat.messages[0].text,
                             style: TextStyle(
                               fontSize: 12,
                             ),
+                            maxLines: 2,
                           ),
                           SizedBox(
                             height: 15,
@@ -78,4 +85,5 @@ class UserCard extends StatelessWidget {
       ),
     );
   }
+
 }

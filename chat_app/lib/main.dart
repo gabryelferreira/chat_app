@@ -1,3 +1,4 @@
+import 'package:chat_app/src/screens/add_chat/add_chat_view.dart';
 import 'package:chat_app/src/screens/after_launch_screen/after_launch_screen_view.dart';
 import 'package:chat_app/src/screens/contact/contact_view.dart';
 import 'package:chat_app/src/screens/home/home_view.dart';
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Chat App',
       theme: ThemeData(
-        primaryColor: Colors.pink,
+        primaryColor: Colors.blue,
       ),
       initialRoute: '/',
       onGenerateRoute: (RouteSettings settings) {
@@ -36,9 +37,12 @@ class MyApp extends StatelessWidget {
             ContactScreen arguments = settings.arguments;
             return CupertinoPageRoute(
                 builder: (_) => ContactScreen(
-                      user: arguments.user,
+                      chat: arguments.chat,
                     ),
                 settings: settings);
+          case '/add-chat':
+            return CupertinoPageRoute(
+                builder: (_) => AddChatScreen(), settings: settings);
           default:
             return CupertinoPageRoute(
                 builder: (_) => AfterLaunchScreen(), settings: settings);

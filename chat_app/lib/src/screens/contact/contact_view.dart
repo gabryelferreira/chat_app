@@ -1,13 +1,13 @@
-import 'package:chat_app/src/data/models/user.dart';
+import 'package:chat_app/src/data/models/chat.dart';
 import 'package:chat_app/src/screens/contact/contact_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ContactScreen extends StatefulWidget {
-  final User user;
+  final Chat chat;
 
   ContactScreen({
-    @required this.user,
+    @required this.chat,
   });
 
   @override
@@ -23,7 +23,7 @@ class _ContactScreenState extends State<ContactScreen> {
     super.initState();
     _contactController = ContactController(
       context: context,
-      user: widget.user,
+      chat: widget.chat,
     );
   }
 
@@ -46,7 +46,7 @@ class _ContactScreenState extends State<ContactScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    _contactController.user.name,
+                    _contactController.chat.otherUser.name,
                     style: TextStyle(
                       color: Colors.white,
                     ),
@@ -149,7 +149,7 @@ class _ContactScreenState extends State<ContactScreen> {
 
   Widget renderMessages(BuildContext context) {
     return Column(
-      children: _contactController.messages.map((message) {
+      children: _contactController.chat.messages.map((message) {
         return Column(
           children: <Widget>[
             // SizedBox(
@@ -158,7 +158,7 @@ class _ContactScreenState extends State<ContactScreen> {
             Material(
               color: Colors.transparent,
               child: Align(
-                alignment: message.socketId == 'MY_SOCKET_ID'
+                alignment: message.userId == _contactController.chat.myUser.id
                     ? Alignment.centerRight
                     : Alignment.centerLeft,
                 child: Container(
@@ -170,8 +170,8 @@ class _ContactScreenState extends State<ContactScreen> {
                     margin: EdgeInsets.symmetric(
                       vertical: 2,
                     ),
-                    color: message.socketId == 'MY_SOCKET_ID'
-                        ? Color(0xFFFFC0CB)
+                    color: message.userId == _contactController.chat.myUser.id
+                        ? Color(0xFFC0CBFF)
                         : Colors.white,
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -194,16 +194,16 @@ class _ContactScreenState extends State<ContactScreen> {
   }
 
   Widget renderOnline() {
-    if (_contactController.userOnlineInMyChat) {
-      return Text(
-        'online na sua conversa',
-        style: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
-          color: Colors.greenAccent,
-        ),
-      );
-    }
+    // if (_contactController.userOnlineInMyChat) {
+    //   return Text(
+    //     'online na sua conversa',
+    //     style: TextStyle(
+    //       fontSize: 12,
+    //       fontWeight: FontWeight.bold,
+    //       color: Colors.greenAccent,
+    //     ),
+    //   );
+    // }
     return Container(width: 0, height: 0);
   }
 }

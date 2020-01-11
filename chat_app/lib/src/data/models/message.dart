@@ -1,15 +1,24 @@
+import 'package:flutter/material.dart';
+
 class Message {
+
+  String id;
+  String userId;
   String text;
-  String socketId;
+  String createdAt;
 
   Message({
+    this.id,
+    this.userId,
     this.text,
-    this.socketId = 'MY_SOCKET_ID',
+    this.createdAt,
   });
 
   Message.fromJson(Map<String, dynamic> json) {
-    text = json['message'];
-    socketId = json['from'];
+    id = json['_id'];
+    userId = json['userId'];
+    text = json['text'];
+    createdAt = json['createdAt'];
   }
 
 }

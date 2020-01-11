@@ -2,7 +2,8 @@ require('dotenv').config()
 const express = require('express');
 const cors = require('cors');
 const mongoDB = require('./src/databases/mongodb/index');
-const socketIO = require('socket.io')
+const socketIO = require('socket.io');
+const shared = require('./src/shared');
 
 const app = express();
 
@@ -11,29 +12,15 @@ app.use(cors());
 
 const server = require('http').createServer(app);
 const io = socketIO(server);
+shared.io = io;
 
-var users = [];
+let users = [];
+shared.users = users;
 
 io.on('connection', socket => {
     socket.on("user-in", (user) => {
         users.push({ ...user, socketId: socket.id });
         io.emit("users-update", users);
-    });
-
-    socket.on("entered-chat", (socketId) => {
-        socket.broadcast.emit("entered-chat", socket.id);
-    });
-
-    socket.on("leave-chat", (socketId) => {
-        socket.broadcast.emit("leave-chat", socket.id);
-    });
-
-    socket.on("message", (data) => {
-        socket.broadcast.to(data.to)
-            .emit('message', {
-                from: socket.id,
-                message: data.message,
-            });
     });
 
     socket.on("user-left", () => {

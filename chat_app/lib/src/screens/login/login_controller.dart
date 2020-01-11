@@ -1,18 +1,17 @@
 import 'dart:async';
 
 import 'package:chat_app/src/data/models/custom_error.dart';
-import 'package:chat_app/src/data/models/user_with_token.dart';
+import 'package:chat_app/src/data/models/user.dart';
 import 'package:chat_app/src/data/repositories/login_repository.dart';
 import 'package:chat_app/src/screens/home/home_view.dart';
 import 'package:chat_app/src/utils/custom_shared_preferences.dart';
+import 'package:chat_app/src/utils/state_control.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class LoginController {
+class LoginController extends StateControl {
 
   LoginRepository _loginRepository = LoginRepository();
-
-  StreamController<String> streamController = StreamController();
 
   final BuildContext context;
 
@@ -36,10 +35,11 @@ class LoginController {
     this.passwordController.addListener(this.validateForm);
   }
 
+  @override
   void dispose() {
+    super.dispose();
     this.usernameController.dispose();
     this.passwordController.dispose();
-    streamController.close();
   }
 
   void submitForm() async {
@@ -50,9 +50,9 @@ class LoginController {
     var loginResponse = await _loginRepository.login(username, password);
     if (loginResponse is CustomError) {
       showAlertDialog(loginResponse.errorMessage);
-    } else if (loginResponse is UserWithToken) {
+    } else if (loginResponse is User) {
       await CustomSharedPreferences.setString('token', loginResponse.token);
-      await CustomSharedPreferences.setString('user', loginResponse.user.toString());
+      await CustomSharedPreferences.setString('user', loginResponse.toString());
       Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
     }
     _formSubmitting = false;
@@ -70,10 +70,6 @@ class LoginController {
     }
     _isFormValid = isFormValid;
     notifyListeners();
-  }
-
-  void notifyListeners() {
-    streamController.add("change");
   }
 
   showAlertDialog(String message) {

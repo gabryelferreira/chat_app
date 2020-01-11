@@ -1,21 +1,33 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:chat_app/src/data/models/chat.dart';
+import 'package:chat_app/src/data/models/custom_error.dart';
 import 'package:chat_app/src/data/models/user.dart';
+import 'package:chat_app/src/data/repositories/chat_repository.dart';
+import 'package:chat_app/src/screens/add_chat/add_chat_view.dart';
 import 'package:chat_app/src/screens/login/login_view.dart';
 import 'package:chat_app/src/utils/custom_shared_preferences.dart';
 import 'package:chat_app/src/utils/socket_controller.dart';
+import 'package:chat_app/src/utils/state_control.dart';
 import 'package:flutter/material.dart';
 
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
-class HomeController {
+class HomeController extends StateControl {
+
+  ChatRepository _chatRepository = ChatRepository();
   
   final BuildContext context;
 
-  StreamController<String> streamController = StreamController();
+  bool _error = false;
+  bool get error => _error;
 
-  IO.Socket socket = SocketController.socket;
+  List<Chat> _chats = [];
+  List<Chat> get chats => _chats;
+
+  bool _loading = true;
+  bool get loading => _loading;
 
 
   List<User> _users = [];
@@ -28,13 +40,22 @@ class HomeController {
   }
 
   void init() {
-    initSocket();
+    getChats();
   }
 
-  void initSocket() async {
-    // connectSocket();
-    emitUserIn();
-    socketOnUsersUpdate();
+  void getChats() async {
+    final dynamic chatResponse = await _chatRepository.getChats();
+    if (chatResponse is CustomError) {
+      print("error bb $chatResponse");
+      _error = true;
+    }
+    if (chatResponse is List<Chat>) {
+      _chats = await Future.wait(chatResponse.map((chat) => chat.formatChat()));
+      print("cai aqui nos chats $chats");
+    }
+    
+    _loading = false;
+    notifyListeners();
   }
 
   Future<User> getUserFromSharedPreferences() async {
@@ -43,61 +64,18 @@ class HomeController {
     return user;
   }
 
-  void emitUserIn() async {
-    User user = await getUserFromSharedPreferences();
-    Map<String, dynamic> userJson = user.toJson();
-    socket.emit("user-in", userJson);
-  }
-
-  void socketOnUsersUpdate() {
-    socket.on('users-update', (dynamic data) async {
-      List<dynamic> usersData = data;
-      List<User> newUsers = usersData.map((user) => User.fromJson(user)).toList();
-      User user = await getUserFromSharedPreferences();
-
-      _users = newUsers.where((newUser) => newUser.id != user.id).toList();
-      notifyListeners();
-    });
-  }
-
-  removeUser(String id) {
-    _users.removeWhere((item) => item.id == id);
-    notifyListeners();
-  }
-
-  addUser(User user) {
-    _users.add(user);
-    notifyListeners();
-  }
-
   void logout() async {
-    disconnectSocket();
-    
     await CustomSharedPreferences.remove('user');
     await CustomSharedPreferences.remove('token');
     Navigator.of(context).pushNamedAndRemoveUntil(LoginScreen.routeName, (_) => false);
   }
 
-  void notifyListeners() {
-    streamController.add('change');
+  void openAddChatScreen() {
+    Navigator.of(context).pushNamed(AddChatScreen.routeName);
   }
 
-  void connectSocket() {
-    if (!socket.connected) {
-      socket.connect();
-    }
-  }
-
-  void disconnectSocket() {
-    if (socket.connected) {
-      // socket.disconnect();
-      socket.emit('user-left');
-      socket.off('users-update');
-    }
-  }
-
+  @override
   void dispose() {
-    disconnectSocket();
-    streamController.close();
+    super.dispose();
   }
 }
