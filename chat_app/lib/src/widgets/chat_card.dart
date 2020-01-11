@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:chat_app/src/data/models/chat.dart';
 import 'package:chat_app/src/data/models/user.dart';
+import 'package:chat_app/src/data/providers/chats_provider.dart';
 import 'package:chat_app/src/screens/contact/contact_view.dart';
 import 'package:chat_app/src/utils/custom_shared_preferences.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ChatCard extends StatelessWidget {
   final Chat chat;
@@ -20,8 +22,10 @@ class ChatCard extends StatelessWidget {
     return Container(
       child: InkWell(
         onTap: () {
+          ChatsProvider _chatsProvider = Provider.of<ChatsProvider>(context, listen: false);
+          _chatsProvider.setSelectedChat(chat);
           Navigator.of(context)
-              .pushNamed(ContactScreen.routeName, arguments: ContactScreen(chat: chat));
+              .pushNamed(ContactScreen.routeName);
         },
         child: Padding(
           padding: EdgeInsets.only(

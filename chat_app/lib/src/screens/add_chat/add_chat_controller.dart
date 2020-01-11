@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:chat_app/src/data/models/chat.dart';
 import 'package:chat_app/src/data/models/custom_error.dart';
 import 'package:chat_app/src/data/models/user.dart';
+import 'package:chat_app/src/data/providers/chats_provider.dart';
 import 'package:chat_app/src/data/repositories/chat_repository.dart';
 import 'package:chat_app/src/data/repositories/user_repository.dart';
 import 'package:chat_app/src/screens/contact/contact_view.dart';
@@ -14,6 +15,7 @@ import 'package:chat_app/src/utils/state_control.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:provider/provider.dart';
 
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
@@ -60,6 +62,7 @@ class AddChatController extends StateControl {
   }
 
   void newChat(User user) async {
+    
     _showProgressDialog();
     dynamic response = await _chatRepository.getChatByUsersIds(user.id);
     if (response is CustomError) {
@@ -68,10 +71,9 @@ class AddChatController extends StateControl {
     if (response is Chat) {
       await _dismissProgressDialog();
       _chat = await response.formatChat();
-      Navigator.of(context).pushNamed(ContactScreen.routeName,
-          arguments: ContactScreen(
-            chat: _chat,
-          ));
+      ChatsProvider _chatsProvider = Provider.of<ChatsProvider>(context, listen: false);
+      _chatsProvider.setSelectedChat(_chat);
+      Navigator.of(context).pushNamed(ContactScreen.routeName);
     }
     await _dismissProgressDialog();
     _loading = false;

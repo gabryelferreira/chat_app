@@ -5,11 +5,8 @@ import 'package:flutter/material.dart';
 
 class ContactScreen extends StatefulWidget {
   static final String routeName = "/contact";
-  final Chat chat;
 
-  ContactScreen({
-    @required this.chat,
-  });
+  ContactScreen();
 
   @override
   _ContactScreenState createState() => _ContactScreenState();
@@ -24,7 +21,6 @@ class _ContactScreenState extends State<ContactScreen> {
     super.initState();
     _contactController = ContactController(
       context: context,
-      chat: widget.chat,
     );
   }
 
@@ -32,6 +28,12 @@ class _ContactScreenState extends State<ContactScreen> {
   void dispose() {
     _contactController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    _contactController.initProvider();
+    super.didChangeDependencies();
   }
 
   @override

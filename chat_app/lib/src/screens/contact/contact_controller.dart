@@ -1,14 +1,18 @@
 import 'package:chat_app/src/data/models/chat.dart';
 import 'package:chat_app/src/data/models/message.dart';
+import 'package:chat_app/src/data/providers/chats_provider.dart';
 import 'package:chat_app/src/data/repositories/chat_repository.dart';
 import 'package:chat_app/src/utils/state_control.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 
 class ContactController extends StateControl {
   BuildContext context;
-  Chat chat;
 
   ChatRepository _chatRepository = ChatRepository();
+
+  ChatsProvider _chatsProvider;
+  Chat get chat => _chatsProvider.selectedChat;
 
   TextEditingController textController = TextEditingController();
 
@@ -20,17 +24,15 @@ class ContactController extends StateControl {
 
   ContactController({
     @required this.context,
-    @required this.chat,
   }) {
     this.init();
   }
 
   void init() {
-    // socket.on('message', (dynamic data) {
-    //   Map<String, dynamic> json = data;
-    //   Message message = Message.fromJson(json['message']);
-    //   addMessage(message);
-    // });
+  }
+
+  void initProvider() {
+    _chatsProvider = Provider.of<ChatsProvider>(context);
   }
 
   void sendMessage() {

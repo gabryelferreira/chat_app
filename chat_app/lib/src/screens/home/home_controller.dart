@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:chat_app/src/data/models/chat.dart';
 import 'package:chat_app/src/data/models/custom_error.dart';
 import 'package:chat_app/src/data/models/user.dart';
+import 'package:chat_app/src/data/providers/chats_provider.dart';
 import 'package:chat_app/src/data/repositories/chat_repository.dart';
 import 'package:chat_app/src/screens/add_chat/add_chat_view.dart';
 import 'package:chat_app/src/screens/login/login_view.dart';
@@ -11,12 +12,15 @@ import 'package:chat_app/src/utils/custom_shared_preferences.dart';
 import 'package:chat_app/src/utils/socket_controller.dart';
 import 'package:chat_app/src/utils/state_control.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class HomeController extends StateControl {
 
   ChatRepository _chatRepository = ChatRepository();
+
+  ChatsProvider _chatsProvider;
 
   IO.Socket socket = SocketController.socket;
   
@@ -25,8 +29,7 @@ class HomeController extends StateControl {
   bool _error = false;
   bool get error => _error;
 
-  List<Chat> _chats = [];
-  List<Chat> get chats => _chats;
+  List<Chat> get chats => _chatsProvider.chats;
 
   bool _loading = true;
   bool get loading => _loading;
@@ -46,6 +49,10 @@ class HomeController extends StateControl {
     initSocket();
   }
 
+  void initProvider() {
+    _chatsProvider = Provider.of<ChatsProvider>(context);
+  }
+
   void initSocket() {
     emitUserIn();
     onMessage();
@@ -60,15 +67,16 @@ class HomeController extends StateControl {
   void onMessage() async {
     socket.on("message", (dynamic data) async {
       print("data = $data");
-      Map<String, dynamic> json = jsonDecode(data);
+      Map<String, dynamic> json = data;
       Chat chat = Chat.fromJson(json);
-      int chatIndex = _chats.indexWhere((_chat) => _chat.id == chat.id);
+      int chatIndex = chats.indexWhere((_chat) => _chat.id == chat.id);
+      List<Chat> newChats = chats;
       if (chatIndex > -1) {
-        _chats[chatIndex].messages = chat.messages;
+        newChats[chatIndex].messages = chat.messages;
       } else {
-        _chats.add(await chat.formatChat());
+        newChats.add(await chat.formatChat());
       }
-      notifyListeners();
+      _chatsProvider.setChats(newChats);
     });
   }
 
@@ -82,7 +90,7 @@ class HomeController extends StateControl {
       _error = true;
     }
     if (chatResponse is List<Chat>) {
-      _chats = await formatChats(chatResponse);
+      _chatsProvider.setChats(await formatChats(chatResponse));
     }
     
     _loading = false;
