@@ -166,7 +166,7 @@ class _ContactScreenState extends State<ContactScreen> {
                     ? Alignment.centerRight
                     : Alignment.centerLeft,
                 child: Container(
-                  constraints: BoxConstraints(maxWidth: double.infinity - 30),
+                  constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(4),
                   ),
