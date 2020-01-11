@@ -97,6 +97,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                     child: Align(
                                       alignment: Alignment.centerLeft,
                                       child: TextField(
+                                        autocorrect: false,
                                         cursorColor:
                                             Theme.of(context).primaryColor,
                                         controller:
