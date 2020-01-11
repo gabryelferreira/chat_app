@@ -134,9 +134,6 @@ class ChatCard extends StatelessWidget {
   }
 
   int _numberOfUnreadMessagesByMe() {
-    // chat.messages.forEach((message) {
-    //   print("message.unreadByMe ${message.unreadByMe}");
-    // });
     return chat.messages.where((message) => message.unreadByMe).length;
   }
 

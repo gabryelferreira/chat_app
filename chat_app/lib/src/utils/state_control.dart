@@ -12,11 +12,9 @@ class StateControl implements StateAbstractControl {
   }
 
   void init() {
-    print("Initializing state");
   }
 
   void dispose() {
-    print("Diposing state");
     streamController.close();
   }
 }

@@ -20,7 +20,6 @@ class Message {
   });
 
   Message.fromJson(Map<String, dynamic> json) {
-    print("jsonMessage = $json");
     id = json['_id'];
     userId = json['userId'];
     text = json['text'];
