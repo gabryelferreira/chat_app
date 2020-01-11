@@ -111,6 +111,11 @@ class HomeController extends StateControl {
     return await Future.wait(chats.map((chat) => chat.formatChat()));
   }
 
+  int calculateChatsWithMessages() {
+    print("chamando ${chats.where((chat) => chat.messages.length > 0).length}");
+    return chats.where((chat) => chat.messages.length > 0).length;
+  }
+
   Future<User> getUserFromSharedPreferences() async {
     final savedUser = await CustomSharedPreferences.get('user');
     User user = User.fromJson(jsonDecode(savedUser));

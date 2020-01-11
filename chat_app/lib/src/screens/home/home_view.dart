@@ -77,9 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 backgroundColor: Theme.of(context).primaryColor,
               ),
-              SliverFillRemaining(
-                child: usersList(context),
-              ),
+              usersList(context),
             ],
           ),
           floatingActionButton: FloatingActionButton(
@@ -93,18 +91,24 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget usersList(BuildContext context) {
     if (_homeController.loading) {
-      return Center(
-        child: CupertinoActivityIndicator(),
+      return SliverFillRemaining(
+        child: Center(
+          child: CupertinoActivityIndicator(),
+        ),
       );
     }
     if (_homeController.error) {
-      return Center(
-        child: Text('Ocorreu um erro ao buscar suas conversas.'),
+      return SliverFillRemaining(
+        child: Center(
+          child: Text('Ocorreu um erro ao buscar suas conversas.'),
+        ),
       );
     }
     if (_homeController.chats.length == 0) {
-      return Center(
-        child: Text('Voce nao possui conversas.'),
+      return SliverFillRemaining(
+        child: Center(
+          child: Text('Voce nao possui conversas.'),
+        ),
       );
     }
     bool theresChatsWithMessages = _homeController.chats.where((chat) {
@@ -112,29 +116,38 @@ class _HomeScreenState extends State<HomeScreen> {
         }).length >
         0;
     if (!theresChatsWithMessages) {
-      return Center(
-        child: Text('Voce nao possui conversas.'),
+      return SliverFillRemaining(
+        child: Center(
+          child: Text('Voce nao possui conversas.'),
+        ),
       );
     }
-    return ListView(
-      padding: EdgeInsets.symmetric(
-        vertical: 10,
+    return SliverPadding(
+      padding: EdgeInsets.symmetric(vertical: 10),
+      sliver: SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (BuildContext context, int index) {
+            return Column(
+              children: _homeController.chats.map((chat) {
+                if (chat.messages.length == 0) {
+                  return Container(height: 0, width: 0);
+                }
+                return Column(
+                  children: <Widget>[
+                    ChatCard(
+                      chat: chat,
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                  ],
+                );
+              }).toList(),
+            );
+          },
+          childCount: 1,
+        ),
       ),
-      children: _homeController.chats.map((chat) {
-        if (chat.messages.length == 0) {
-          return Container(height: 0, width: 0);
-        }
-        return Column(
-          children: <Widget>[
-            ChatCard(
-              chat: chat,
-            ),
-            SizedBox(
-              height: 5,
-            ),
-          ],
-        );
-      }).toList(),
     );
   }
 }

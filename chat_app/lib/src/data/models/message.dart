@@ -1,11 +1,10 @@
-import 'package:flutter/material.dart';
 
 class Message {
 
   String id;
   String userId;
   String text;
-  String createdAt;
+  int createdAt;
 
   Message({
     this.id,
@@ -15,6 +14,7 @@ class Message {
   });
 
   Message.fromJson(Map<String, dynamic> json) {
+    print("jsonMessage = $json");
     id = json['_id'];
     userId = json['userId'];
     text = json['text'];

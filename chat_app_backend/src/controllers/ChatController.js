@@ -4,6 +4,14 @@ const Dates = require('../utils/dates');
 const shared = require('../shared/index');
 
 
+function formatChatMessageTime(chat) {
+    chat.messages = chat.messages.map(message => {
+        message.createdAt = new Date(message.createdAt).getTime();
+        return message;
+    });
+    return chat;
+}
+
 class ChatController {
 
     async getChatByUserId(req, res) {
@@ -26,9 +34,9 @@ class ChatController {
                 });
                 chat = await ChatRepository.getChatById(chat._id);
             }
-
+            const formattedChat = formatChatMessageTime(chat);
             return res.json({
-                chat
+                chat: formattedChat
             });
 
         } catch (err) {
@@ -40,14 +48,12 @@ class ChatController {
         }
     }
     async getChats(req, res) {
-        console.log("entrei aqui no getChats");
         try {
             const myId = req._id;
-            console.log("myId", myId);
             const chats = await ChatRepository.getUserChats(myId);
-            console.log("peguei os chats", chats);
+            const formattedChats = chats.map(formatChatMessageTime);
             return res.json({
-                chats
+                chats: formattedChats
             });
         } catch (err) {
             console.error(err);
@@ -76,18 +82,12 @@ class ChatController {
                 _id: messageId,
                 userId: ObjectId(myId),
                 text,
-                createdAt: datetime
+                createdAt: Date.now()
             }
             chat.messages.push(message);
             const users = shared.users;
             const findUsers = users.filter(user => (user._id == chat.lowerId._id || user._id == chat.higherId._id) && user._id != myId);
-            console.log("findUsers", findUsers);
             findUsers.forEach(user => {
-                console.log("emitindo", {
-                    ...chat,
-                    messages: chat.messages,
-                });
-                console.log("emitindo para user com socket", user.socket.id);
                 user.socket.emit('message', chat);
             })
 
