@@ -76,13 +76,16 @@ class ChatController {
                 })
             }
             const chat = await ChatRepository.getChatById(chatId);
+            const IS_LOWER_ID_USER = chat.lowerId._id == myId;
             const datetime = Dates.getDateTime();
             const messageId = ObjectId();
             const message = {
                 _id: messageId,
                 userId: ObjectId(myId),
                 text,
-                createdAt: Date.now()
+                createdAt: Date.now(),
+                unreadByLowerIdUser: IS_LOWER_ID_USER ? false : true,
+                unreadByHigherIdUser: IS_LOWER_ID_USER ? true : false,
             }
             chat.messages.push(message);
             const users = shared.users;
@@ -95,6 +98,38 @@ class ChatController {
             
             return res.json({
                 chat
+            })
+        } catch (err) {
+            console.error(err);
+            return res.json({
+                error: true,
+                errorMessage: err
+            })
+        }
+    }
+
+    async readChat(req, res) {
+        try {
+            const chatId = req.params.chatId;
+            const myId = req._id;
+            const chat = await ChatRepository.getChatById(chatId);
+            const IS_LOWER_ID_USER = chat.lowerId._id == myId;
+            console.log("lowerId", chat.lowerId._id);
+            console.log("myId", myId);
+            console.log("isLowerId = ", IS_LOWER_ID_USER);
+            const messages = chat.messages.map(message => {
+                if (IS_LOWER_ID_USER) {
+                    message.unreadByLowerIdUser = false;
+                } else {
+                    message.unreadByHigherIdUser = false;
+                }
+                return message;
+            });
+
+            const updatedChat = await ChatRepository.updateChatMessages(chat._id, messages);
+            
+            return res.json({
+                chat: updatedChat
             })
         } catch (err) {
             console.error(err);

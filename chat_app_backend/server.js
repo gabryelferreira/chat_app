@@ -21,19 +21,16 @@ io.on('connection', socket => {
     socket.on("user-in", (user) => {
         users.push({ ...user, socket });
         shared.users = users;
-        console.log("users now", users);
     });
     
     socket.on("user-left", () => {
         users = users.filter(x => x.socket.id !== socket.id);
         shared.users = users;
-        console.log("user left", users);
     });
 
     socket.on("disconnect", () => {
         users = users.filter(x => x.socket.id !== socket.id);
         shared.users = users;
-        console.log("user disconnected", users);
     });
 
 });

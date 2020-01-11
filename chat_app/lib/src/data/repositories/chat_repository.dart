@@ -46,4 +46,17 @@ class ChatRepository {
       return CustomError.fromJson({'error': true, 'errorMessage': 'Error'});
     }
   }
+
+  Future<dynamic> readChat(String chatId) async {
+    try {
+      var response = await http.post('${MyUrls.serverUrl}/chats/$chatId/read');
+      final dynamic chatResponse = jsonDecode(response.body)['chat'];
+
+      final Chat chat = Chat.fromJson(chatResponse);
+      return chat;
+    } catch (err) {
+      return CustomError.fromJson({'error': true, 'errorMessage': 'Error'});
+    }
+  }
+
 }

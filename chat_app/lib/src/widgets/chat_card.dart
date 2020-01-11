@@ -10,7 +10,6 @@ import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 
-
 class ChatCard extends StatelessWidget {
   final Chat chat;
 
@@ -94,30 +93,18 @@ class ChatCard extends StatelessWidget {
                                 child: Column(
                                   children: <Widget>[
                                     Text(
-                                      messageDate(chat.messages[chat.messages.length - 1].createdAt),
+                                      messageDate(chat
+                                          .messages[chat.messages.length - 1]
+                                          .createdAt),
                                       style: TextStyle(
-                                        color: Theme.of(context).primaryColor,
+                                        color: _numberOfUnreadMessagesByMe() > 0 ? Theme.of(context).primaryColor : Colors.grey,
                                         fontSize: 12,
                                       ),
                                     ),
                                     SizedBox(
                                       height: 5,
                                     ),
-                                    Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 5, vertical: 2),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(30),
-                                        color: Colors.blue,
-                                      ),
-                                      child: Text(
-                                        '2',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12,
-                                        ),
-                                      ),
-                                    ),
+                                    unreadMessages(),
                                   ],
                                 ),
                               ),
@@ -147,4 +134,28 @@ class ChatCard extends StatelessWidget {
     return format.format(date);
   }
 
+  int _numberOfUnreadMessagesByMe() {
+    return chat.messages.where((message) => message.unreadByMe).length;
+  }
+
+  Widget unreadMessages() {
+    final _unreadMessages = _numberOfUnreadMessagesByMe();
+    if (_unreadMessages == 0) {
+      return Container(width: 0, height: 0);
+    }
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(30),
+        color: Colors.blue,
+      ),
+      child: Text(
+        _unreadMessages.toString(),
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 12,
+        ),
+      ),
+    );
+  }
 }

@@ -50,9 +50,17 @@ class Chat {
     if (myUserFromSharedPreferences.id == lowerIdUser.id) {
       myUser = lowerIdUser;
       otherUser = higherIdUser;
+      this.messages = this.messages.map((message) {
+        message.unreadByMe = message.unreadByLowerIdUser;
+        return message;
+      }).toList();
     } else {
       otherUser = lowerIdUser;
       myUser = higherIdUser;
+      this.messages = this.messages.map((message) {
+        message.unreadByMe = message.unreadByHigherIdUser;
+        return message;
+      }).toList();
     }
   }
 
