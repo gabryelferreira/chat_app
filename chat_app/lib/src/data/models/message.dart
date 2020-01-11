@@ -5,6 +5,7 @@ class Message {
   String userId;
   String text;
   int createdAt;
+  bool unread;
 
   Message({
     this.id,
