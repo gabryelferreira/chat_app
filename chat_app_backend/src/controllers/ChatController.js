@@ -86,7 +86,7 @@ class ChatController {
                 console.log("emitindo para user com socket", user.socket.id);
                 user.socket.emit('message', {
                     ...chat,
-                    messages,
+                    messages: chat.messages,
                 });
             })
 
