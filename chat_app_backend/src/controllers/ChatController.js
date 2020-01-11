@@ -83,6 +83,10 @@ class ChatController {
             const findUsers = users.filter(user => (user._id == chat.lowerId._id || user._id == chat.higherId._id) && user._id != myId);
             console.log("findUsers", findUsers);
             findUsers.forEach(user => {
+                console.log("emitindo", {
+                    ...chat,
+                    messages: chat.messages,
+                });
                 console.log("emitindo para user com socket", user.socket.id);
                 user.socket.emit('message', {
                     ...chat,
