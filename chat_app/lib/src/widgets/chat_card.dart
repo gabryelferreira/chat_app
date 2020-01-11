@@ -21,7 +21,7 @@ class ChatCard extends StatelessWidget {
       child: InkWell(
         onTap: () {
           Navigator.of(context)
-              .pushNamed('/contact', arguments: ContactScreen(chat: chat));
+              .pushNamed(ContactScreen.routeName, arguments: ContactScreen(chat: chat));
         },
         child: Padding(
           padding: EdgeInsets.only(
@@ -59,7 +59,7 @@ class ChatCard extends StatelessWidget {
                             height: 2,
                           ),
                           Text(
-                            chat.messages[0].text,
+                            chat.messages[chat.messages.length - 1].text,
                             style: TextStyle(
                               fontSize: 12,
                             ),

@@ -19,18 +19,21 @@ shared.users = users;
 
 io.on('connection', socket => {
     socket.on("user-in", (user) => {
-        users.push({ ...user, socketId: socket.id });
-        io.emit("users-update", users);
+        users.push({ ...user, socket });
+        shared.users = users;
+        console.log("users now", users);
     });
-
+    
     socket.on("user-left", () => {
-        users = users.filter(x => x.socketId !== socket.id);
-        io.emit("users-update", users);
+        users = users.filter(x => x.socket.id !== socket.id);
+        shared.users = users;
+        console.log("user left", users);
     });
 
     socket.on("disconnect", () => {
-        users = users.filter(x => x.socketId !== socket.id);
-        io.emit("users-update", users);
+        users = users.filter(x => x.socket.id !== socket.id);
+        shared.users = users;
+        console.log("user disconnected", users);
     });
 
 });

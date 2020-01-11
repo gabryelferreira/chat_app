@@ -1,6 +1,7 @@
 const ChatRepository = require('../repositories/ChatRepository');
 const ObjectId = require('mongoose').Types.ObjectId;
 const Dates = require('../utils/dates');
+const shared = require('../shared/index');
 
 
 class ChatController {
@@ -23,6 +24,7 @@ class ChatController {
                     lowerId,
                     higherId
                 });
+                chat = await ChatRepository.getChatById(chat._id);
             }
 
             return res.json({
@@ -66,14 +68,26 @@ class ChatController {
             const chat = await ChatRepository.getChatById(chatId);
             const datetime = Dates.getDateTime();
             const messageId = ObjectId();
-            chat.messages.push({
+            const message = {
                 _id: messageId,
                 userId: ObjectId(myId),
                 text,
                 createdAt: datetime
+            }
+            chat.messages.push(message);
+            const users = shared.users;
+            const findUsers = users.filter(user => (user._id == chat.lowerId._id || user._id == chat.higherId._id) && user._id != myId);
+            console.log("findUsers", findUsers);
+            findUsers.forEach(user => {
+                console.log("emitindo para user com socket", user.socket.id);
+                user.socket.emit('message', {
+                    ...chat,
+                    messages,
+                });
             })
-            console.log("chat agora = ", chat);
+
             chat.save();
+            
             return res.json({
                 chat
             })

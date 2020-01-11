@@ -30,6 +30,8 @@ dependencies:
 
   socket_io_client: ^0.9.7+2
 
+  progress_dialog: ^1.2.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

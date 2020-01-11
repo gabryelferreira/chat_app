@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ContactScreen extends StatefulWidget {
+  static final String routeName = "/contact";
   final Chat chat;
 
   ContactScreen({

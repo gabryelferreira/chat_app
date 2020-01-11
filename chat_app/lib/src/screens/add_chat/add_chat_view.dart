@@ -70,6 +70,7 @@ class _AddChatScreenState extends State<AddChatScreen> {
           children: <Widget>[
             UserCard(
               user: user,
+              onTap: _addChatController.newChat,
             ),
             SizedBox(
               height: 5,

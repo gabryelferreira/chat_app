@@ -21,4 +21,13 @@ class Message {
     createdAt = json['createdAt'];
   }
 
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> json = {};
+    json['_id'] = id;
+    json['userId'] = userId;
+    json['text'] = text;
+    json['createdAt'] = createdAt;
+    return json;
+  }
+
 }

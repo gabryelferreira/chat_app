@@ -15,11 +15,13 @@ class ChatRepository {
         return await Chat.findOne({
             lowerId: ObjectId(lowerId),
             higherId: ObjectId(higherId)
-        });
+        }).populate('lowerId').populate('higherId');
     }
 
     async getChatById(chatId) {
-        return await Chat.findOne({ _id: ObjectId(chatId) });
+        return await Chat.findOne({ 
+            _id: ObjectId(chatId)
+        }).populate('lowerId').populate('higherId');
     }
 
     async getUserChats(userId) {

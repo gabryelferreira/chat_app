@@ -61,7 +61,6 @@ class RegisterController extends StateControl {
     if (loginResponse is CustomError) {
       showAlertDialog(loginResponse.errorMessage);
     } else if (loginResponse is User) {
-      await CustomSharedPreferences.setString('token', loginResponse.token);
       await CustomSharedPreferences.setString('user', loginResponse.toString());
       Navigator.of(context).pushNamedAndRemoveUntil(HomeScreen.routeName, (_) => false);
     }

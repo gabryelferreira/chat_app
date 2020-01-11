@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:chat_app/src/data/models/custom_error.dart';
 import 'package:chat_app/src/data/models/user.dart';
 import 'package:chat_app/src/utils/custom_http_client.dart';
+import 'package:chat_app/src/utils/custom_shared_preferences.dart';
 import 'package:chat_app/src/utils/my_urls.dart';
 
 class LoginRepository {
@@ -20,8 +21,9 @@ class LoginRepository {
       if (loginResponse['error'] != null) {
         return CustomError.fromJson(loginResponse);
       }
-
-      final User user = User.fromJson(loginResponse);
+      await CustomSharedPreferences.setString('token', loginResponse['token']);
+      final User user = User.fromJson(loginResponse['user']);
+      await CustomSharedPreferences.setString('user', user.toString());
       return user;
     } catch (err) {
       return CustomError(
