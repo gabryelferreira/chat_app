@@ -77,6 +77,14 @@ class HomeController extends StateControl {
         newChats.add(await chat.formatChat());
       }
       _chatsProvider.setChats(newChats);
+      if (_chatsProvider.selectedChat != null) {
+        _chatsProvider.chats.forEach((chat) {
+          if (chat.id == _chatsProvider.selectedChat.id) {
+            _chatsProvider.setSelectedChat(chat);
+            return;
+          }
+        });
+      }
     });
   }
 
@@ -90,7 +98,9 @@ class HomeController extends StateControl {
       _error = true;
     }
     if (chatResponse is List<Chat>) {
-      _chatsProvider.setChats(await formatChats(chatResponse));
+      List<Chat> chats = await formatChats(chatResponse);
+      print("chats = $chats");
+      _chatsProvider.setChats(chats);
     }
     
     _loading = false;

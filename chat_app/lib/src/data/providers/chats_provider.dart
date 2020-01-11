@@ -1,4 +1,5 @@
 import 'package:chat_app/src/data/models/chat.dart';
+import 'package:chat_app/src/data/models/message.dart';
 import 'package:flutter/material.dart';
 
 class ChatsProvider with ChangeNotifier {
@@ -16,6 +17,11 @@ class ChatsProvider with ChangeNotifier {
 
   setSelectedChat(Chat selectedChat) {
     _selectedChat = selectedChat;
+    notifyListeners();
+  }
+
+  addMessageToSelectedChat(Message message) {
+    _selectedChat.messages.add(message);
     notifyListeners();
   }
 

@@ -72,6 +72,15 @@ class AddChatController extends StateControl {
       await _dismissProgressDialog();
       _chat = await response.formatChat();
       ChatsProvider _chatsProvider = Provider.of<ChatsProvider>(context, listen: false);
+      bool findChatIndex = _chatsProvider.chats.indexWhere((chat) => chat.id == _chat.id) > -1;
+      if (!findChatIndex) {
+        print("entrei aqui, nao tem esse chat");
+        List<Chat> newChats = new List<Chat>.from(_chatsProvider.chats);
+        newChats.add(_chat);
+        _chatsProvider.setChats(newChats);
+      } else {
+        print("ja tem esse chat");
+      }
       _chatsProvider.setSelectedChat(_chat);
       Navigator.of(context).pushNamed(ContactScreen.routeName);
     }

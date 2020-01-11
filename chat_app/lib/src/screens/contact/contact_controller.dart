@@ -47,9 +47,7 @@ class ContactController extends StateControl {
   }
 
   void addMessage(Message message) {
-    
-    chat.messages.add(message);
-    notifyListeners();
+    _chatsProvider.addMessageToSelectedChat(message);
   }
 
   void dispose() {
