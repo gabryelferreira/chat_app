@@ -38,26 +38,6 @@ class _HomeScreenState extends State<HomeScreen> {
       stream: _homeController.streamController.stream,
       builder: (context, snapshot) {
         return Scaffold(
-          // appBar: AppBar(
-          //   title: Text(
-          //     'Usuarios on-line',
-          //     style: TextStyle(
-          //       color: Colors.white,
-          //     ),
-          //   ),
-          //   actions: [
-          //     Material(
-          //       color: Colors.transparent,
-          //       child: IconButton(
-          //         icon: Icon(
-          //           Icons.exit_to_app,
-          //           color: Colors.white,
-          //         ),
-          //         onPressed: _homeController.logout,
-          //       ),
-          //     ),
-          //   ],
-          // ),
           body: CustomScrollView(
             slivers: <Widget>[
               CupertinoSliverNavigationBar(
@@ -122,7 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     }
     return SliverPadding(
-      padding: EdgeInsets.symmetric(vertical: 10),
+      padding: EdgeInsets.symmetric(vertical: 5),
       sliver: SliverList(
         delegate: SliverChildBuilderDelegate(
           (BuildContext context, int index) {

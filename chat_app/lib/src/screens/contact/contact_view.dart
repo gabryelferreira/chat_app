@@ -43,20 +43,14 @@ class _ContactScreenState extends State<ContactScreen> {
         builder: (context, snapshot) {
           return Scaffold(
             backgroundColor: Color(0xFFEEEEEE),
-            appBar: AppBar(
-              title: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    _contactController.chat.otherUser.name,
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                  renderOnline(),
-                ],
+            appBar: CupertinoNavigationBar(
+              middle: Text(
+                _contactController.chat.otherUser.name,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
+              backgroundColor: Color(0xFFF8F8F8),
             ),
             body: SafeArea(
               child: Container(

@@ -27,19 +27,16 @@ class _AddChatScreenState extends State<AddChatScreen> {
         stream: _addChatController.streamController.stream,
         builder: (context, snapshot) {
           return Scaffold(
-            appBar: CupertinoNavigationBar(
-              middle: Text(
-                'Usuarios',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
+            body: CustomScrollView(
+              slivers: <Widget>[
+                CupertinoSliverNavigationBar(
+                  largeTitle: Text(
+                    'Usuarios',
+                  ),
+                  backgroundColor: Color(0xFFF8F8F8),
                 ),
-              ),
-              backgroundColor: Color(0xFFF8F8F8),
-            ),
-            body: SafeArea(
-              child: Container(
-                child: renderUsers(),
-              ),
+                renderUsers(),
+              ],
             ),
           );
         });
@@ -47,35 +44,47 @@ class _AddChatScreenState extends State<AddChatScreen> {
 
   Widget renderUsers() {
     if (_addChatController.loading) {
-      return Center(
-        child: CupertinoActivityIndicator(),
+      return SliverFillRemaining(
+        child: Center(
+          child: CupertinoActivityIndicator(),
+        ),
       );
     }
     if (_addChatController.error) {
-      return Center(
-        child: Text('Ocorreu um erro ao buscar os usuarios.'),
+      return SliverFillRemaining(
+        child: Center(
+          child: Text('Ocorreu um erro ao buscar os usuarios.'),
+        ),
       );
     }
     if (_addChatController.users.length == 0) {
-      return Center(
-        child: Text('Nenhum usuario encontrado'),
+      return SliverFillRemaining(
+        child: Center(
+          child: Text('Nenhum usuario encontrado'),
+        ),
       );
     }
-    return ListView(
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-      children: _addChatController.users.map((user) {
-        return Column(
-          children: <Widget>[
-            UserCard(
-              user: user,
-              onTap: _addChatController.newChat,
-            ),
-            SizedBox(
-              height: 5,
-            ),
-          ],
-        );
-      }).toList(),
+    return SliverPadding(
+      padding: EdgeInsets.only(top: 5),
+      sliver: SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (BuildContext context, int index) {
+            return Column(
+              children: _addChatController.users.map((user) {
+                return Column(
+                  children: <Widget>[
+                    UserCard(
+                      user: user,
+                      onTap: _addChatController.newChat,
+                    ),
+                  ],
+                );
+              }).toList(),
+            );
+          },
+          childCount: 1,
+        ),
+      ),
     );
   }
 }
