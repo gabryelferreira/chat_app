@@ -58,7 +58,13 @@ class HomeController extends StateControl {
   }
 
   void requestPushNotificationPermission() {
-    _firebaseMessaging.requestNotificationPermissions();
+    _firebaseMessaging.requestNotificationPermissions(
+      IosNotificationSettings(
+        alert: true,
+        badge: true,
+        provisional: false,
+      ),
+    );
   }
 
   void configureFirebaseMessaging() {
@@ -73,7 +79,7 @@ class HomeController extends StateControl {
         print("onResume: $message");
       },
     );
-    _firebaseMessaging.getToken().then((token){
+    _firebaseMessaging.getToken().then((token) {
       print("token $token");
       if (token != null) {
         _userRepository.saveUserFcmToken(token);
