@@ -1,4 +1,5 @@
 import 'package:chat_app/src/data/models/chat.dart';
+import 'package:chat_app/src/data/models/message.dart';
 import 'package:chat_app/src/data/providers/chats_provider.dart';
 import 'package:chat_app/src/screens/contact/contact_controller.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,7 +16,6 @@ class ContactScreen extends StatefulWidget {
 }
 
 class _ContactScreenState extends State<ContactScreen> {
-
   ContactController _contactController;
 
   @override
@@ -59,18 +59,20 @@ class _ContactScreenState extends State<ContactScreen> {
                 child: Column(
                   children: <Widget>[
                     Expanded(
-                      child: ListView(
+                      child: ListView.builder(
                         reverse: true,
-                        children: <Widget>[
-                          Padding(
+                        itemCount: _contactController.chat.messages.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Padding(
                             padding: EdgeInsets.only(
                               left: 15,
                               right: 15,
                               top: 5,
                             ),
-                            child: renderMessages(context),
-                          ),
-                        ],
+                            child: renderMessage(context,
+                                _contactController.chat.messages[index]),
+                          );
+                        },
                       ),
                     ),
                     Material(
@@ -147,63 +149,43 @@ class _ContactScreenState extends State<ContactScreen> {
         });
   }
 
-  Widget renderMessages(BuildContext context) {
+  Widget renderMessage(BuildContext context, Message message) {
     return Column(
-      children: _contactController.chat.messages.map((message) {
-        return Column(
-          children: <Widget>[
-            // SizedBox(
-            //   height: 5,
-            // ),
-            Material(
-              color: Colors.transparent,
-              child: Align(
-                alignment: message.userId == _contactController.chat.myUser.id
-                    ? Alignment.centerRight
-                    : Alignment.centerLeft,
-                child: Container(
-                  constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Card(
-                    margin: EdgeInsets.symmetric(
-                      vertical: 2,
-                    ),
-                    color: message.userId == _contactController.chat.myUser.id
-                        ? Color(0xFFC0CBFF)
-                        : Colors.white,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                      child: Text(
-                        message.text,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 14.5,
-                        ),
-                      ),
+      children: <Widget>[
+        Material(
+          color: Colors.transparent,
+          child: Align(
+            alignment: message.userId == _contactController.chat.myUser.id
+                ? Alignment.centerRight
+                : Alignment.centerLeft,
+            child: Container(
+              constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width * 0.75),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Card(
+                margin: EdgeInsets.symmetric(
+                  vertical: 2,
+                ),
+                color: message.userId == _contactController.chat.myUser.id
+                    ? Color(0xFFC0CBFF)
+                    : Colors.white,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  child: Text(
+                    message.text,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 14.5,
                     ),
                   ),
                 ),
               ),
             ),
-          ],
-        );
-      }).toList(),
+          ),
+        ),
+      ],
     );
-  }
-
-  Widget renderOnline() {
-    // if (_contactController.userOnlineInMyChat) {
-    //   return Text(
-    //     'online na sua conversa',
-    //     style: TextStyle(
-    //       fontSize: 12,
-    //       fontWeight: FontWeight.bold,
-    //       color: Colors.greenAccent,
-    //     ),
-    //   );
-    // }
-    return Container(width: 0, height: 0);
   }
 }
