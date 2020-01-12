@@ -19,6 +19,12 @@ class UserRepository {
         return await User.find({ _id: { $ne: ObjectId(userId) } });
     }
 
+    async saveUserFcmToken(userId, fcmToken) {
+        return await User.updateOne({ _id: ObjectId(userId) }, {
+            fcmToken
+        });
+    }
+
 
 }
 

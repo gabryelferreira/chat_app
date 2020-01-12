@@ -6,6 +6,7 @@ import 'package:chat_app/src/data/models/custom_error.dart';
 import 'package:chat_app/src/data/models/user.dart';
 import 'package:chat_app/src/data/providers/chats_provider.dart';
 import 'package:chat_app/src/data/repositories/chat_repository.dart';
+import 'package:chat_app/src/data/repositories/user_repository.dart';
 import 'package:chat_app/src/screens/add_chat/add_chat_view.dart';
 import 'package:chat_app/src/screens/login/login_view.dart';
 import 'package:chat_app/src/utils/custom_shared_preferences.dart';
@@ -20,6 +21,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 
 class HomeController extends StateControl {
   ChatRepository _chatRepository = ChatRepository();
+
+  UserRepository _userRepository = UserRepository();
 
   ChatsProvider _chatsProvider;
 
@@ -72,6 +75,9 @@ class HomeController extends StateControl {
     );
     _firebaseMessaging.getToken().then((token){
       print("token $token");
+      if (token != null) {
+        _userRepository.saveUserFcmToken(token);
+      }
     });
   }
 
@@ -148,6 +154,7 @@ class HomeController extends StateControl {
 
   void logout() async {
     emitUserLeft();
+    // _userRepository.saveUserFcmToken(null);
     await CustomSharedPreferences.remove('user');
     await CustomSharedPreferences.remove('token');
     Navigator.of(context)

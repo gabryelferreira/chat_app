@@ -1,6 +1,7 @@
 const ChatRepository = require('../repositories/ChatRepository');
 const ObjectId = require('mongoose').Types.ObjectId;
 const shared = require('../shared/index');
+const PushNotificationController = require('./PushNotificationController');
 
 
 function formatChatMessageTime(chat) {
@@ -91,9 +92,21 @@ class ChatController {
             findUsers.forEach(user => {
                 user.socket.emit('message', chat);
             })
-
             chat.save();
-            
+            let userFcmToken;
+            let myName;
+            if (isLowerIdUser) {
+                userFcmToken = chat.higherId.fcmToken;
+                myName = chat.lowerId.name;
+            } else {
+                userFcmToken = chat.lowerId.fcmToken;
+                myName = chat.higherId.name;
+            }
+            console.log("fcmToken para mandar notificacao", userFcmToken);
+            if (userFcmToken) {
+                PushNotificationController.sendNotification(myName, text, userFcmToken);
+            }
+
             return res.json({
                 chat
             })
@@ -124,7 +137,7 @@ class ChatController {
             const updatedChat = await ChatRepository.updateChatMessages(chat._id, messages);
 
             const formatedChat = formatChatMessageTime(updatedChat);
-            
+
             return res.json({
                 chat: formatedChat
             })

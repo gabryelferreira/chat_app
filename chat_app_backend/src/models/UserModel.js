@@ -15,6 +15,7 @@ const UserSchema = mongoose.Schema({
         required: true,
         select: false,
     },
+    fcmToken: String,
     createdAt: {
         type: Date,
         default: Date.now

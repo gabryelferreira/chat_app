@@ -13,14 +13,20 @@ class UserRepository {
       var response = await http.get('${MyUrls.serverUrl}/users');
       final List<dynamic> usersResponse = jsonDecode(response.body)['users'];
 
-      final List<User> users = usersResponse.map((user) => User.fromJson(user)).toList();
+      final List<User> users =
+          usersResponse.map((user) => User.fromJson(user)).toList();
       return users;
     } catch (err) {
-      return CustomError.fromJson({
-        'error': true,
-        'errorMessage': 'Error'
-      });
+      return CustomError.fromJson({'error': true, 'errorMessage': 'Error'});
     }
   }
 
+  Future<void> saveUserFcmToken(String fcmToken) async {
+    try {
+      var body = jsonEncode({'fcmToken': fcmToken});
+      await http.post('${MyUrls.serverUrl}/fcm-token', body: body);
+    } catch (err) {
+      print("error $err");
+    }
+  }
 }
