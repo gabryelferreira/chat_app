@@ -63,6 +63,7 @@ class _ContactScreenState extends State<ContactScreen> {
                         reverse: true,
                         itemCount: _contactController.chat.messages.length,
                         itemBuilder: (BuildContext context, int index) {
+                          final reverseIndex = _contactController.chat.messages.length - 1 - index;
                           return Padding(
                             padding: EdgeInsets.only(
                               left: 15,
@@ -70,7 +71,7 @@ class _ContactScreenState extends State<ContactScreen> {
                               top: 5,
                             ),
                             child: renderMessage(context,
-                                _contactController.chat.messages[index]),
+                                _contactController.chat.messages[reverseIndex]),
                           );
                         },
                       ),

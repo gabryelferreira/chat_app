@@ -38,6 +38,7 @@ class ContactController extends StateControl {
 
   void sendMessage() {
     String text = textController.text;
+    if (text.length == 0) return;
     _chatRepository.sendMessage(chat.id, text);
     textController.text = "";
     Message message = Message(
