@@ -122,9 +122,11 @@ class ChatController {
             });
 
             const updatedChat = await ChatRepository.updateChatMessages(chat._id, messages);
+
+            const formatedChat = formatChatMessageTime(updatedChat);
             
             return res.json({
-                chat: updatedChat
+                chat: formatedChat
             })
         } catch (err) {
             console.error(err);
