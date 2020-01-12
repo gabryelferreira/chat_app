@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ChatsProvider()),
       ],
       child: MaterialApp(
-        title: 'Chat App',
+        title: 'Fala Comigo',
         theme: ThemeData(
           primaryColor: Colors.blue,
         ),
