@@ -1,7 +1,5 @@
-# SecretChatApp
-A chat app made with Flutter, Node.js, Socket.io and MongoDB.
-
-The intention in making this project is to have a fully private conversation with friends where messages are not stored anywhere and you cant see then after leaving the chat.
+# ChatApp
+A fully working chat app made with Flutter, Node.js, Socket.io and MongoDB.
 
 ## Setup the project
 
