@@ -78,7 +78,7 @@ class AddChatController extends StateControl {
         newChats.add(_chat);
         _chatsProvider.setChats(newChats);
       }
-      _chatsProvider.setSelectedChat(_chat);
+      _chatsProvider.setSelectedChat(_chat.id);
       Navigator.of(context).pushNamed(ContactScreen.routeName);
     }
     await _dismissProgressDialog();

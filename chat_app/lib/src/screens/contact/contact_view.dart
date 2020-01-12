@@ -1,7 +1,9 @@
 import 'package:chat_app/src/data/models/chat.dart';
+import 'package:chat_app/src/data/providers/chats_provider.dart';
 import 'package:chat_app/src/screens/contact/contact_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ContactScreen extends StatefulWidget {
   static final String routeName = "/contact";

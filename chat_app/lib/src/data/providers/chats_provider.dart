@@ -10,8 +10,8 @@ class ChatsProvider with ChangeNotifier {
   List<Chat> _chats = [];
   List<Chat> get chats => _chats;
 
-  Chat _selectedChat;
-  Chat get selectedChat => _selectedChat;
+  String _selectedChatId;
+  String get selectedChatId => _selectedChatId;
 
   setChats(List<Chat> chats) {
     List<Chat> newChats = new List<Chat>.from(chats);
@@ -26,36 +26,38 @@ class ChatsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  setSelectedChat(Chat selectedChat) {
-    _selectedChat = selectedChat;
-    if (selectedChat != null) {
+  setSelectedChat(String selectedChatId) {
+    _selectedChatId = selectedChatId;
+    if (selectedChatId != null) {
       _readSelectedChatMessages();
-      _chatRepository.readChat(_selectedChat.id);
+      _chatRepository.readChat(_selectedChatId);
       notifyListeners();
     }
   }
 
   _readSelectedChatMessages() {
-    _selectedChat.messages = _selectedChat.messages.map((message) {
-      message.unreadByMe = false;
-      return message;
-    }).toList();
-    updateSelectedChatInChats();
-  }
-
-  addMessageToSelectedChat(Message message) {
-    _selectedChat.messages.add(message);
-    updateSelectedChatInChats();
-  }
-
-  updateSelectedChatInChats() {
-    List<Chat> newChats = _chats.map((chat) {
-      if (chat.id == _selectedChat.id) {
-        chat = _selectedChat;
+    List<Chat> updatedChats = _chats;
+    updatedChats = updatedChats.map((chat) {
+      if (chat.id == _selectedChatId) {
+        chat.messages = chat.messages.map((message) {
+          message.unreadByMe = false;
+          return message;
+        }).toList();
       }
       return chat;
     }).toList();
-    setChats(newChats);
+    setChats(updatedChats);
+  }
+
+  addMessageToSelectedChat(Message message) {
+    List<Chat> updatedChats = _chats;
+    updatedChats = updatedChats.map((chat) {
+      if (chat.id == _selectedChatId) {
+        chat.messages.add(message);
+      }
+      return chat;
+    }).toList();
+    setChats(updatedChats);
   }
 
 }

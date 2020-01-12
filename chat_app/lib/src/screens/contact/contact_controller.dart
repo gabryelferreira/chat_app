@@ -12,7 +12,7 @@ class ContactController extends StateControl {
   ChatRepository _chatRepository = ChatRepository();
 
   ChatsProvider _chatsProvider;
-  Chat get chat => _chatsProvider.selectedChat;
+  Chat chat;
 
   TextEditingController textController = TextEditingController();
 
@@ -33,6 +33,7 @@ class ContactController extends StateControl {
 
   void initProvider() {
     _chatsProvider = Provider.of<ChatsProvider>(context);
+    chat = _chatsProvider.chats.firstWhere((chat) => chat.id == _chatsProvider.selectedChatId);
   }
 
   void sendMessage() {

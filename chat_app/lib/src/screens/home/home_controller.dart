@@ -77,10 +77,10 @@ class HomeController extends StateControl {
         newChats.add(await chat.formatChat());
       }
       _chatsProvider.setChats(newChats);
-      if (_chatsProvider.selectedChat != null) {
+      if (_chatsProvider.selectedChatId != null) {
         _chatsProvider.chats.forEach((chat) {
-          if (chat.id == _chatsProvider.selectedChat.id) {
-            _chatsProvider.setSelectedChat(chat);
+          if (chat.id == _chatsProvider.selectedChatId) {
+            _chatsProvider.setSelectedChat(chat.id);
             return;
           }
         });
