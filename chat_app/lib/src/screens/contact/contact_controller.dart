@@ -1,113 +1,63 @@
-import 'dart:async';
-
+import 'package:chat_app/src/data/models/chat.dart';
 import 'package:chat_app/src/data/models/message.dart';
-import 'package:chat_app/src/data/models/user.dart';
-import 'package:chat_app/src/utils/socket_controller.dart';
+import 'package:chat_app/src/data/providers/chats_provider.dart';
+import 'package:chat_app/src/data/repositories/chat_repository.dart';
+import 'package:chat_app/src/utils/state_control.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 
-import 'package:socket_io_client/socket_io_client.dart' as IO;
-
-class ContactController {
+class ContactController extends StateControl {
   BuildContext context;
-  User user;
 
-  bool userOnlineInMyChat = false;
+  ChatRepository _chatRepository = ChatRepository();
 
-  StreamController streamController = StreamController();
+  ChatsProvider _chatsProvider;
+  Chat chat;
+
   TextEditingController textController = TextEditingController();
 
-  IO.Socket socket = SocketController.socket;
+  bool _error = false;
+  bool get error => _error;
 
-  List<Message> _messages = [];
-  List<Message> get messages => _messages;
+  bool _loading = true;
+  bool get loading => _loading;
 
   ContactController({
     @required this.context,
-    @required this.user,
   }) {
     this.init();
   }
 
   void init() {
-    initSocket();
   }
 
-  void initSocket() async {
-    socketOnMessage();
-    socketEnteredChat();
-    socketOnEnteredChat();
-    socketOnLeaveChat();
+  void initProvider() {
+    _chatsProvider = Provider.of<ChatsProvider>(context);
+    chat = _chatsProvider.chats.firstWhere((chat) => chat.id == _chatsProvider.selectedChatId);
   }
 
-  void socketEnteredChat() {
-    socket.emit("entered-chat", user.socketId);
-  }
-
-  void socketLeaveChat() {
-    socket.emit("leave-chat", user.socketId);
-  }
-
-  void socketOnEnteredChat() {
-    socket.on("entered-chat", (dynamic data) {
-      String socketId = data;
-      if (user.socketId == socketId) {
-        if (!userOnlineInMyChat) {
-          socketEnteredChat();
-        }
-        userOnlineInMyChat = true;
-        notifyListeners();
-      }
-    });
-  }
-
-  void socketOnLeaveChat() {
-    socket.on("leave-chat", (dynamic data) {
-      String socketId = data;
-      if (user.socketId == socketId) {
-        userOnlineInMyChat = false;
-        notifyListeners();
-      }
-    });
-  }
-
-  void socketOnMessage() {
-    socket.on("message", (dynamic data) {
-      Message message = Message.fromJson(data);
-      addMessage(message.text, message.socketId);
-    });
-  }
-
-  void sendMessage() async {
-    String text = textController.value.text;
-    socket.emit("message", {
-      "to": user.socketId,
-      "message": text,
-    });
+  void sendMessage() {
+    String text = textController.text;
+    if (text.length == 0) return;
+    _chatRepository.sendMessage(chat.id, text);
     textController.text = "";
-    addMessage(text, 'MY_SOCKET_ID');
+    Message message = Message(
+      text: text,
+      userId: chat.myUser.id,
+      createdAt: DateTime.now().millisecondsSinceEpoch,
+      unreadByMe: false,
+      unreadByOtherUser: true,
+    );
+    addMessage(message);
   }
 
-  void addMessage(String text, String socketId) {
-    messages.add(Message(text: text, socketId: socketId));
-    notifyListeners();
+  void addMessage(Message message) {
+    _chatsProvider.addMessageToSelectedChat(message);
   }
 
-  void notifyListeners() {
-    streamController.add('change');
-  }
-
-  void closeSocketEvents() {
-    if (socket.connected) {
-      socket.off('entered-chat');
-      socket.off('leave-chat');
-      socket.off('message');
-    }
-  }
-
-  dispose() {
-    socketLeaveChat();
-    closeSocketEvents();
+  void dispose() {
+    super.dispose();
     textController.dispose();
-    streamController.close();
+    _chatsProvider.setSelectedChat(null);
   }
 }

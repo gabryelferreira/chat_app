@@ -1,8 +1,9 @@
 import 'dart:convert';
 
 import 'package:chat_app/src/data/models/custom_error.dart';
-import 'package:chat_app/src/data/models/user_with_token.dart';
+import 'package:chat_app/src/data/models/user.dart';
 import 'package:chat_app/src/utils/custom_http_client.dart';
+import 'package:chat_app/src/utils/custom_shared_preferences.dart';
 import 'package:chat_app/src/utils/my_urls.dart';
 
 class RegisterRepository {
@@ -16,13 +17,14 @@ class RegisterRepository {
         '${MyUrls.serverUrl}/user',
         body: body,
       );
-      final dynamic loginResponse = jsonDecode(response.body);
+      final dynamic registerResponse = jsonDecode(response.body);
+      await CustomSharedPreferences.setString('token', registerResponse['token']);
 
-      if (loginResponse['error'] != null) {
-        return CustomError.fromJson(loginResponse);
+      if (registerResponse['error'] != null) {
+        return CustomError.fromJson(registerResponse);
       }
 
-      final UserWithToken user = UserWithToken.fromJson(loginResponse);
+      final User user = User.fromJson(registerResponse['user']);
       return user;
     } catch (err) {
       throw err;

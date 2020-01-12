@@ -1,39 +1,44 @@
 import 'package:chat_app/src/data/models/user.dart';
-import 'package:chat_app/src/screens/contact/contact_view.dart';
 import 'package:flutter/material.dart';
 
 class UserCard extends StatelessWidget {
   final User user;
+  final Function onTap;
 
   UserCard({
     @required this.user,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return Container(
       child: InkWell(
         onTap: () {
-          Navigator.of(context)
-              .pushNamed('/contact', arguments: ContactScreen(user: user));
+          if (this.onTap != null) {
+            this.onTap(user);
+          }
         },
         child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: 15,
-            vertical: 10,
+          padding: EdgeInsets.only(
+            left: 15,
+            top: 5,
+            bottom: 0,
           ),
           child: Container(
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 CircleAvatar(
                   backgroundImage: AssetImage('assets/images/contact.jpg'),
-                  radius: 25,
+                  radius: 20,
                 ),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 15,
-                      vertical: 10,
+                    padding: const EdgeInsets.only(
+                      left: 15,
+                      top: 5,
+                      bottom: 5,
                     ),
                     child: Container(
                       child: Column(
@@ -53,15 +58,18 @@ class UserCard extends StatelessWidget {
                               fontSize: 12,
                             ),
                           ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Container(
+                            width: double.infinity,
+                            height: 1,
+                            color: Color(0xFFDDDDDD),
+                          ),
                         ],
                       ),
                     ),
                   ),
-                ),
-                Icon(
-                  Icons.arrow_forward_ios,
-                  size: 16,
-                  color: Colors.grey,
                 ),
               ],
             ),
