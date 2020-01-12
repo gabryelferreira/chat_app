@@ -38,6 +38,8 @@ dependencies:
 
   firebase_messaging: ^6.0.9
 
+  flutter_statusbarcolor: ^0.2.3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
