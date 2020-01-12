@@ -1,4 +1,4 @@
-package com.example.chat_app
+package com.gabryel.fala_comigo
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

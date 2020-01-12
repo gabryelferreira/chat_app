@@ -16,14 +16,17 @@ import 'package:provider/provider.dart';
 
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
-class HomeController extends StateControl {
+import 'package:firebase_messaging/firebase_messaging.dart';
 
+class HomeController extends StateControl {
   ChatRepository _chatRepository = ChatRepository();
 
   ChatsProvider _chatsProvider;
 
   IO.Socket socket = SocketController.socket;
-  
+
+  FirebaseMessaging _firebaseMessaging;
+
   final BuildContext context;
 
   bool _error = false;
@@ -33,7 +36,6 @@ class HomeController extends StateControl {
 
   bool _loading = true;
   bool get loading => _loading;
-
 
   List<User> _users = [];
   List<User> get users => _users;
@@ -47,6 +49,30 @@ class HomeController extends StateControl {
   void init() {
     getChats();
     initSocket();
+    _firebaseMessaging = FirebaseMessaging();
+    requestPushNotificationPermission();
+    configureFirebaseMessaging();
+  }
+
+  void requestPushNotificationPermission() {
+    _firebaseMessaging.requestNotificationPermissions();
+  }
+
+  void configureFirebaseMessaging() {
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print("onMessage: $message");
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print("onLaunch: $message");
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print("onResume: $message");
+      },
+    );
+    _firebaseMessaging.getToken().then((token){
+      print("token $token");
+    });
   }
 
   void initProvider() {
@@ -101,7 +127,7 @@ class HomeController extends StateControl {
       List<Chat> chats = await formatChats(chatResponse);
       _chatsProvider.setChats(chats);
     }
-    
+
     _loading = false;
     notifyListeners();
   }
@@ -124,7 +150,8 @@ class HomeController extends StateControl {
     emitUserLeft();
     await CustomSharedPreferences.remove('user');
     await CustomSharedPreferences.remove('token');
-    Navigator.of(context).pushNamedAndRemoveUntil(LoginScreen.routeName, (_) => false);
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil(LoginScreen.routeName, (_) => false);
   }
 
   void openAddChatScreen() {

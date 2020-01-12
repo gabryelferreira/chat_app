@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "291274571703",
+    "firebase_url": "https://fala-comigo-2ab86.firebaseio.com",
+    "project_id": "fala-comigo-2ab86",
+    "storage_bucket": "fala-comigo-2ab86.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:291274571703:android:2f01d58da9574444897232",
+        "android_client_info": {
+          "package_name": "com.gabryel.fala_comigo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "291274571703-ud1j61aaocsnt6enqc5tp4dsi7tfnivh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-Df1DxSSEXpHu5Y1-n4TXmqqS2b38xzE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "291274571703-ud1j61aaocsnt6enqc5tp4dsi7tfnivh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
