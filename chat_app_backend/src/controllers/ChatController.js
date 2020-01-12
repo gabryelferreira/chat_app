@@ -1,6 +1,5 @@
 const ChatRepository = require('../repositories/ChatRepository');
 const ObjectId = require('mongoose').Types.ObjectId;
-const Dates = require('../utils/dates');
 const shared = require('../shared/index');
 
 
@@ -77,7 +76,6 @@ class ChatController {
             }
             const chat = await ChatRepository.getChatById(chatId);
             const IS_LOWER_ID_USER = chat.lowerId._id == myId;
-            const datetime = Dates.getDateTime();
             const messageId = ObjectId();
             const message = {
                 _id: messageId,
@@ -114,9 +112,6 @@ class ChatController {
             const myId = req._id;
             const chat = await ChatRepository.getChatById(chatId);
             const IS_LOWER_ID_USER = chat.lowerId._id == myId;
-            console.log("lowerId", chat.lowerId._id);
-            console.log("myId", myId);
-            console.log("isLowerId = ", IS_LOWER_ID_USER);
             const messages = chat.messages.map(message => {
                 if (IS_LOWER_ID_USER) {
                     message.unreadByLowerIdUser = false;
