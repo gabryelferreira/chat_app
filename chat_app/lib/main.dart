@@ -7,7 +7,7 @@ import 'package:chat_app/src/screens/login/login_view.dart';
 import 'package:chat_app/src/screens/register/register_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
+// import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:provider/provider.dart';
 
 void main() => runApp(MyApp());
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    FlutterStatusbarcolor.setStatusBarColor(Colors.blue);
+    // FlutterStatusbarcolor.setStatusBarColor(Colors.blue);
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ChatsProvider()),
