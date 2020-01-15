@@ -24,7 +24,6 @@ class Message {
     text = json['text'];
     userId = json['userId'];
     sendAt = json['sendAt'];
-    unreadByMe = json['unreadByMe'] ?? true;
   }
 
   Map<String, dynamic> toJson() {
@@ -34,7 +33,6 @@ class Message {
     json['text'] = text;
     json['userId'] = userId;
     json['sendAt'] = sendAt;
-    json['unreadByMe'] = unreadByMe ?? false;
     return json;
   }
 
