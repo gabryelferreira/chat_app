@@ -51,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Icons.exit_to_app,
                       color: Theme.of(context).primaryColor,
                     ),
-                    onPressed: _homeController.logout,
+                    onPressed: () {},
                   ),
                 ),
                 backgroundColor: Color(0xFFF8F8F8),

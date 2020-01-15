@@ -1,8 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:chat_app/src/data/local_database/chat_table.dart';
+import 'package:chat_app/src/data/local_database/local_database.dart';
 import 'package:chat_app/src/data/models/chat.dart';
 import 'package:chat_app/src/data/models/custom_error.dart';
+import 'package:chat_app/src/data/models/message.dart';
 import 'package:chat_app/src/data/models/user.dart';
 import 'package:chat_app/src/data/providers/chats_provider.dart';
 import 'package:chat_app/src/data/repositories/chat_repository.dart';
@@ -23,6 +27,8 @@ class HomeController extends StateControl {
   ChatRepository _chatRepository = ChatRepository();
 
   UserRepository _userRepository = UserRepository();
+
+  LocalDatabase _localDatabase;
 
   ChatsProvider _chatsProvider;
 
@@ -50,21 +56,27 @@ class HomeController extends StateControl {
   }
 
   void init() {
-    getChats();
-    initSocket();
     _firebaseMessaging = FirebaseMessaging();
     requestPushNotificationPermission();
     configureFirebaseMessaging();
+    _localDatabase = LocalDatabase();
+    this.initializeChatTable();
+  }
+
+  initializeChatTable() {
+    _localDatabase.open('fala_comigo.db');
   }
 
   void requestPushNotificationPermission() {
-    _firebaseMessaging.requestNotificationPermissions(
-      IosNotificationSettings(
-        alert: true,
-        badge: true,
-        provisional: false,
-      ),
-    );
+    if (Platform.isIOS) {
+      _firebaseMessaging.requestNotificationPermissions(
+        IosNotificationSettings(
+          alert: true,
+          badge: true,
+          provisional: false,
+        ),
+      );
+    }
   }
 
   void configureFirebaseMessaging() {
@@ -91,89 +103,51 @@ class HomeController extends StateControl {
     _chatsProvider = Provider.of<ChatsProvider>(context);
   }
 
-  void initSocket() {
-    emitUserIn();
-    onMessage();
-  }
-
-  void emitUserIn() async {
-    User user = await getUserFromSharedPreferences();
-    Map<String, dynamic> json = user.toJson();
-    socket.emit("user-in", json);
-  }
-
-  void onMessage() async {
-    socket.on("message", (dynamic data) async {
-      Map<String, dynamic> json = data;
-      Chat chat = Chat.fromJson(json);
-      int chatIndex = chats.indexWhere((_chat) => _chat.id == chat.id);
-      List<Chat> newChats = new List<Chat>.from(chats);
-      if (chatIndex > -1) {
-        newChats[chatIndex].messages = chat.messages;
-        newChats[chatIndex] = await newChats[chatIndex].formatChat();
-      } else {
-        newChats.add(await chat.formatChat());
-      }
-      _chatsProvider.setChats(newChats);
-      if (_chatsProvider.selectedChatId != null) {
-        _chatsProvider.chats.forEach((chat) {
-          if (chat.id == _chatsProvider.selectedChatId) {
-            _chatsProvider.setSelectedChat(chat.id);
-            return;
-          }
-        });
-      }
-    });
-  }
-
-  void emitUserLeft() async {
-    socket.emit("user-left");
-  }
-
-  void getChats() async {
-    final dynamic chatResponse = await _chatRepository.getChats();
-    if (chatResponse is CustomError) {
-      _error = true;
-    }
-    if (chatResponse is List<Chat>) {
-      List<Chat> chats = await formatChats(chatResponse);
-      _chatsProvider.setChats(chats);
-    }
-
-    _loading = false;
-    notifyListeners();
-  }
-
-  Future<List<Chat>> formatChats(List<Chat> chats) async {
-    return await Future.wait(chats.map((chat) => chat.formatChat()));
-  }
-
-  int calculateChatsWithMessages() {
-    return chats.where((chat) => chat.messages.length > 0).length;
-  }
-
-  Future<User> getUserFromSharedPreferences() async {
-    final savedUser = await CustomSharedPreferences.get('user');
-    User user = User.fromJson(jsonDecode(savedUser));
-    return user;
-  }
-
-  void logout() async {
-    emitUserLeft();
-    // _userRepository.saveUserFcmToken(null);
-    await CustomSharedPreferences.remove('user');
-    await CustomSharedPreferences.remove('token');
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil(LoginScreen.routeName, (_) => false);
-  }
-
-  void openAddChatScreen() {
-    Navigator.of(context).pushNamed(AddChatScreen.routeName);
+  void openAddChatScreen() async {
+    // Navigator.of(context).pushNamed(AddChatScreen.routeName);
+    // final chatToInsert = Chat(
+    //   id: 'j8899jf23t2gi4',
+    //   myId: '2w3f23wqf',
+    //   otherUserId: '32fgvew',
+    // );
+    // await _localDatabase.insert(chatToInsert);
+    // final chats = await _localDatabase.getChats();
+    // chats.forEach((chat) {
+    //   print("chat = ${chat.id}");
+    // });
+    User user = User(
+      id: 'fera',
+      name: 'Fera',
+      username: 'fera',
+    );
+    final userCreated = await _localDatabase.createUser(user);
+    Chat chat = Chat(
+      id: 'chat-foda',
+      userId: userCreated.id,
+    );
+    final chatCreated = await _localDatabase.insert(chat);
+    final Message message = Message(
+      chatId: chatCreated.id,
+      id: 'kkk',
+      sendAt: 432141512,
+      text: 'Eai parsa',
+      unreadByMe: true,
+      userId: 'fera'
+    );
+    await _localDatabase.addMessage(message);
+    final Message message2 = Message(
+      chatId: chatCreated.id,
+      id: 'kkkjjj',
+      sendAt: 432141512,
+      text: 'Eai parsa',
+      unreadByMe: true,
+      userId: 'fera'
+    );
+    await _localDatabase.addMessage(message2);
   }
 
   @override
   void dispose() {
     super.dispose();
-    emitUserLeft();
   }
 }

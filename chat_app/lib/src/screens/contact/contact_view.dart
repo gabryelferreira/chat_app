@@ -34,7 +34,6 @@ class _ContactScreenState extends State<ContactScreen> {
 
   @override
   void didChangeDependencies() {
-    _contactController.initProvider();
     super.didChangeDependencies();
   }
 
@@ -47,7 +46,7 @@ class _ContactScreenState extends State<ContactScreen> {
             backgroundColor: Color(0xFFEEEEEE),
             appBar: CupertinoNavigationBar(
               middle: Text(
-                _contactController.chat.otherUser.name,
+                'oi',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
@@ -102,7 +101,6 @@ class _ContactScreenState extends State<ContactScreen> {
                                         controller:
                                             _contactController.textController,
                                         onSubmitted: (_) {
-                                          _contactController.sendMessage();
                                         },
                                         decoration: InputDecoration(
                                           contentPadding:
@@ -123,7 +121,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                 color: Theme.of(context).primaryColor,
                                 borderRadius: BorderRadius.circular(50),
                                 child: InkWell(
-                                  onTap: _contactController.sendMessage,
+                                  onTap: () {},
                                   borderRadius: BorderRadius.circular(50),
                                   child: Container(
                                     width: 50,
@@ -156,7 +154,7 @@ class _ContactScreenState extends State<ContactScreen> {
         Material(
           color: Colors.transparent,
           child: Align(
-            alignment: message.userId == _contactController.chat.myUser.id
+            alignment: message.userId == 'fuck u'
                 ? Alignment.centerRight
                 : Alignment.centerLeft,
             child: Container(
@@ -169,7 +167,7 @@ class _ContactScreenState extends State<ContactScreen> {
                 margin: EdgeInsets.symmetric(
                   vertical: 2,
                 ),
-                color: message.userId == _contactController.chat.myUser.id
+                color: message.userId == 'fuck u'
                     ? Color(0xFFC0CBFF)
                     : Colors.white,
                 child: Padding(

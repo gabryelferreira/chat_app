@@ -8,60 +8,47 @@ import 'package:flutter/material.dart';
 class Chat {
 
   String id;
-  User lowerIdUser;
-  User higherIdUser;
+  String userId;
   List<Message> messages;
-  User myUser;
-  User otherUser;
+  User user;
 
   Chat({
     @required this.id,
-    @required this.lowerIdUser,
-    @required this.higherIdUser,
-    @required this.messages,
+    this.userId,
+    this.messages,
   });
 
   Chat.fromJson(Map<String, dynamic> json) {
     id = json['_id'];
-    lowerIdUser = User.fromJson(json['lowerId']);
-    higherIdUser = User.fromJson(json['higherId']);
-    List<dynamic> _messages = json['messages'];
-    messages = _messages.map((message) => Message.fromJson(message)).toList();
+    userId = json['userId'];
   }
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
     json['_id'] = id;
-    json['lowerId'] = lowerIdUser.toJson();
-    json['higherId'] = higherIdUser.toJson();
-    json['messages'] = messages.map((message) => message.toJson()).toList();
+    json['userId'] = userId;
     return json;
   }
 
-  Future<Chat> formatChat() async {
-    adjustChatUsers();
-    return this;
+  Chat.fromLocalDatabaseMap(Map<String, dynamic> map) {
+    id = map['_id'];
+    userId = map['user_id'];
+    user = User.fromLocalDatabaseMap({
+      '_id': map['user_id'],
+      'name': map['name'],
+      'username': map['username'],
+    });
   }
 
-  void adjustChatUsers() async {
-    final String userString = await CustomSharedPreferences.get('user');
-    final Map<String, dynamic> userJson = jsonDecode(userString);
-    final myUserFromSharedPreferences = User.fromJson(userJson);
-    if (myUserFromSharedPreferences.id == lowerIdUser.id) {
-      myUser = lowerIdUser;
-      otherUser = higherIdUser;
-      this.messages = this.messages.map((message) {
-        message.unreadByMe = message.unreadByLowerIdUser;
-        return message;
-      }).toList();
-    } else {
-      otherUser = lowerIdUser;
-      myUser = higherIdUser;
-      this.messages = this.messages.map((message) {
-        message.unreadByMe = message.unreadByHigherIdUser;
-        return message;
-      }).toList();
-    }
+  Map<String, dynamic> toLocalDatabaseMap() {
+    Map<String, dynamic> map = {};
+    map['_id'] = id;
+    map['user_id'] = userId;
+    return map;
+  }
+
+  Future<Chat> formatChat() async {
+    return this;
   }
 
 }

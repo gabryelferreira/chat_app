@@ -18,8 +18,8 @@ class ChatsProvider with ChangeNotifier {
     newChats.sort((a, b) {
       if (a.messages.length == 0) return 1;
       if (b.messages.length == 0) return -1;
-      int millisecondsA = a.messages[a.messages.length - 1].createdAt;
-      int millisecondsB = b.messages[b.messages.length - 1].createdAt;
+      int millisecondsA = a.messages[a.messages.length - 1].sendAt;
+      int millisecondsB = b.messages[b.messages.length - 1].sendAt;
       return millisecondsA > millisecondsB ? -1 : 1;
     });
     _chats = newChats;

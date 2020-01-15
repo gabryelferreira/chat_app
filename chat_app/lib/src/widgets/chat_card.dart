@@ -64,7 +64,7 @@ class ChatCard extends StatelessWidget {
                                       CrossAxisAlignment.stretch,
                                   children: <Widget>[
                                     Text(
-                                      chat.otherUser.name,
+                                      'hey',
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 16,
@@ -95,7 +95,7 @@ class ChatCard extends StatelessWidget {
                                     Text(
                                       messageDate(chat
                                           .messages[chat.messages.length - 1]
-                                          .createdAt),
+                                          .sendAt),
                                       style: TextStyle(
                                         color: _numberOfUnreadMessagesByMe() > 0 ? Theme.of(context).primaryColor : Colors.grey,
                                         fontSize: 12,

@@ -1,46 +1,61 @@
 
 class Message {
 
+  String localId;
   String id;
-  String userId;
+  String chatId;
   String text;
-  int createdAt;
-  bool unreadByLowerIdUser;
-  bool unreadByHigherIdUser;
+  String userId;
+  int sendAt;
   bool unreadByMe;
-  bool unreadByOtherUser;
 
   Message({
     this.id,
-    this.userId,
+    this.chatId,
     this.text,
-    this.createdAt,
+    this.userId,
+    this.sendAt,
     this.unreadByMe,
-    this.unreadByOtherUser,
   });
 
   Message.fromJson(Map<String, dynamic> json) {
     id = json['_id'];
-    userId = json['userId'];
+    chatId = json['chatId'];
     text = json['text'];
-    createdAt = json['createdAt'];
-    unreadByLowerIdUser = json['unreadByLowerIdUser'] ?? false;
-    unreadByHigherIdUser = json['unreadByHigherIdUser'] ?? false;
+    userId = json['userId'];
+    sendAt = json['sendAt'];
     unreadByMe = json['unreadByMe'] ?? true;
-    unreadByOtherUser = json['unreadByOtherUser'] ?? false;
   }
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
     json['_id'] = id;
-    json['userId'] = userId;
+    json['chatId'] = chatId;
     json['text'] = text;
-    json['createdAt'] = createdAt;
-    json['unreadByLowerIdUser'] = unreadByLowerIdUser ?? false;
-    json['unreadByHigherIdUser'] = unreadByHigherIdUser ?? false;
+    json['userId'] = userId;
+    json['sendAt'] = sendAt;
     json['unreadByMe'] = unreadByMe ?? false;
-    json['unreadByOtherUser'] = unreadByOtherUser ?? false;
     return json;
+  }
+
+  Message.fromLocalDatabaseMap(Map<String, dynamic> json) {
+    id = json['_id'];
+    chatId = json['chat_id'];
+    text = json['text'];
+    userId = json['user_id'];
+    sendAt = json['send_at'];
+    unreadByMe = json['unread_by_me'];
+  }
+
+  Map<String, dynamic> toLocalDatabaseMap() {
+    Map<String, dynamic> map = {};
+    map['_id'] = id;
+    map['chat_id'] = chatId;
+    map['text'] = text;
+    map['user_id'] = userId;
+    map['send_at'] = sendAt;
+    map['unread_by_me'] = unreadByMe ?? false;
+    return map;
   }
 
 }

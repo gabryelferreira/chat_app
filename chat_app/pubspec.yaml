@@ -40,6 +40,8 @@ dependencies:
 
   flutter_statusbarcolor: ^0.2.3
 
+  sqflite: ^1.2.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
