@@ -1,16 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:chat_app/src/data/local_database/db_provider.dart';
 import 'package:chat_app/src/data/models/chat.dart';
 import 'package:chat_app/src/data/models/custom_error.dart';
 import 'package:chat_app/src/data/models/user.dart';
 import 'package:chat_app/src/data/providers/chats_provider.dart';
 import 'package:chat_app/src/data/repositories/chat_repository.dart';
 import 'package:chat_app/src/data/repositories/user_repository.dart';
-import 'package:chat_app/src/screens/contact/contact_view.dart';
-import 'package:chat_app/src/screens/login/login_view.dart';
-import 'package:chat_app/src/utils/custom_shared_preferences.dart';
-import 'package:chat_app/src/utils/socket_controller.dart';
 import 'package:chat_app/src/utils/state_control.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -51,6 +48,7 @@ class AddChatController extends StateControl {
 
   void getUsers() async {
     dynamic response = await _userRepository.getUsers();
+    
     if (response is CustomError) {
       _error = true;
     }
@@ -64,24 +62,14 @@ class AddChatController extends StateControl {
   void newChat(User user) async {
     
     _showProgressDialog();
-    dynamic response = await _chatRepository.getChatByUsersIds(user.id);
-    if (response is CustomError) {
-      _error = true;
-    }
-    if (response is Chat) {
-      await _dismissProgressDialog();
-      _chat = await response.formatChat();
-      ChatsProvider _chatsProvider = Provider.of<ChatsProvider>(context, listen: false);
-      bool findChatIndex = _chatsProvider.chats.indexWhere((chat) => chat.id == _chat.id) > -1;
-      if (!findChatIndex) {
-        List<Chat> newChats = new List<Chat>.from(_chatsProvider.chats);
-        newChats.add(_chat);
-        _chatsProvider.setChats(newChats);
-      }
-      _chatsProvider.setSelectedChat(_chat.id);
-      Navigator.of(context).pushNamed(ContactScreen.routeName);
-    }
-    await _dismissProgressDialog();
+
+    final Chat chat = Chat(
+      id: user.chatId,
+      user: user,
+    );
+    dynamic response = await DBProvider.db.createOrGetChat(chat);
+    print("response = $response");
+    // Provider.of<ChatsProvider>(context, listen: false).setSelectedChat(chat.id);
     _loading = false;
     notifyListeners();
   }

@@ -6,17 +6,20 @@ class User {
   String id;
   String name;
   String username;
+  String chatId;
 
   User({
     @required this.id,
     @required this.name,
     @required this.username,
+    this.chatId,
   });
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['_id'];
     name = json['name'];
     username = json['username'];
+    chatId = json['chatId'];
   }
 
   Map<String, dynamic> toJson() {

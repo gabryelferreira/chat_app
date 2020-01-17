@@ -1,17 +1,29 @@
 const mongoose = require('mongoose');
+const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const MessageSchema = mongoose.Schema({
     chatId: {
         type: String,
         required: true,
     },
-    userId: {
-        type: String,
+    from: {
+        type: ObjectId,
         required: true,
+        ref: 'User',
+    },
+    to: {
+        type: ObjectId,
+        required: true,
+        ref: 'User',
     },
     text: {
         type: String,
         required: true,
+    },
+    triedToGet: {
+        type: Boolean,
+        default: false,
+        select: false,
     },
     sendAt: {
         type: Date,
@@ -19,4 +31,4 @@ const MessageSchema = mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('Messages', MessageSchema);
+module.exports = mongoose.model('Message', MessageSchema);

@@ -10,18 +10,18 @@ class UserTable {
 
   static Future<void> recreateTable(Database db) async {
     await db.execute('''
-          drop table if exists $tableUser
+          drop table if exists tb_user
         ''');
     await UserTable.createTable(db);
   }
 
   static Future<void> createTable(Database db) async {
     await db.execute('''
-          create table $tableUser (
-            $columnLocalId integer primary key autoincrement, 
-            $columnId text not null,
-            $columnName text not null,
-            $columnUsername text not null)
+          create table tb_user (
+            id_user integer primary key autoincrement, 
+            _id text not null,
+            name text not null,
+            username text not null)
           ''');
   }
 

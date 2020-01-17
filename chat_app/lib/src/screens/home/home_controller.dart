@@ -1,19 +1,11 @@
-import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
-import 'package:chat_app/src/data/local_database/chat_table.dart';
-import 'package:chat_app/src/data/local_database/local_database.dart';
 import 'package:chat_app/src/data/models/chat.dart';
-import 'package:chat_app/src/data/models/custom_error.dart';
-import 'package:chat_app/src/data/models/message.dart';
 import 'package:chat_app/src/data/models/user.dart';
 import 'package:chat_app/src/data/providers/chats_provider.dart';
 import 'package:chat_app/src/data/repositories/chat_repository.dart';
 import 'package:chat_app/src/data/repositories/user_repository.dart';
 import 'package:chat_app/src/screens/add_chat/add_chat_view.dart';
-import 'package:chat_app/src/screens/login/login_view.dart';
-import 'package:chat_app/src/utils/custom_shared_preferences.dart';
 import 'package:chat_app/src/utils/socket_controller.dart';
 import 'package:chat_app/src/utils/state_control.dart';
 import 'package:flutter/material.dart';
@@ -27,8 +19,6 @@ class HomeController extends StateControl {
   ChatRepository _chatRepository = ChatRepository();
 
   UserRepository _userRepository = UserRepository();
-
-  LocalDatabase _localDatabase;
 
   ChatsProvider _chatsProvider;
 
@@ -59,12 +49,10 @@ class HomeController extends StateControl {
     _firebaseMessaging = FirebaseMessaging();
     requestPushNotificationPermission();
     configureFirebaseMessaging();
-    _localDatabase = LocalDatabase();
     this.initializeChatTable();
   }
 
   initializeChatTable() {
-    _localDatabase.open('fala_comigo.db');
   }
 
   void requestPushNotificationPermission() {
@@ -104,46 +92,7 @@ class HomeController extends StateControl {
   }
 
   void openAddChatScreen() async {
-    // Navigator.of(context).pushNamed(AddChatScreen.routeName);
-    // final chatToInsert = Chat(
-    //   id: 'j8899jf23t2gi4',
-    //   myId: '2w3f23wqf',
-    //   otherUserId: '32fgvew',
-    // );
-    // await _localDatabase.insert(chatToInsert);
-    // final chats = await _localDatabase.getChats();
-    // chats.forEach((chat) {
-    //   print("chat = ${chat.id}");
-    // });
-    User user = User(
-      id: 'fera',
-      name: 'Fera',
-      username: 'fera',
-    );
-    final userCreated = await _localDatabase.createUser(user);
-    Chat chat = Chat(
-      id: 'chat-foda',
-      userId: userCreated.id,
-    );
-    final chatCreated = await _localDatabase.insert(chat);
-    final Message message = Message(
-      chatId: chatCreated.id,
-      id: 'kkk',
-      sendAt: 432141512,
-      text: 'Eai parsa',
-      unreadByMe: true,
-      userId: 'fera'
-    );
-    await _localDatabase.addMessage(message);
-    final Message message2 = Message(
-      chatId: chatCreated.id,
-      id: 'kkkjjj',
-      sendAt: 432141512,
-      text: 'Eai parsa',
-      unreadByMe: true,
-      userId: 'fera'
-    );
-    await _localDatabase.addMessage(message2);
+    Navigator.of(context).pushNamed(AddChatScreen.routeName);
   }
 
   @override

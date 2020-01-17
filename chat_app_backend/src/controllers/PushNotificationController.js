@@ -2,7 +2,7 @@ const axios = require('axios').default;
 
 class PushNotificationController {
 
-    async sendNotification(title, body, fcmToken) {
+    async send(title, body, fcmToken, data) {
         if (!title || !body || !fcmToken) return;
 
         axios.post('https://fcm.googleapis.com/fcm/send',
@@ -13,9 +13,8 @@ class PushNotificationController {
                 },
                 priority: 'high',
                 data: {
+                    ...data,
                     click_action: "FLUTTER_NOTIFICATION_CLICK",
-                    id: "1",
-                    status: "done"
                 },
                 to: fcmToken
             },

@@ -8,31 +8,28 @@ import 'package:flutter/material.dart';
 class Chat {
 
   String id;
-  String userId;
   List<Message> messages;
   User user;
 
   Chat({
     @required this.id,
-    this.userId,
+    @required this.user,
     this.messages,
   });
 
   Chat.fromJson(Map<String, dynamic> json) {
     id = json['_id'];
-    userId = json['userId'];
+    user = User.fromJson(json['user']);
   }
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
     json['_id'] = id;
-    json['userId'] = userId;
     return json;
   }
 
   Chat.fromLocalDatabaseMap(Map<String, dynamic> map) {
     id = map['_id'];
-    userId = map['user_id'];
     user = User.fromLocalDatabaseMap({
       '_id': map['user_id'],
       'name': map['name'],
@@ -43,7 +40,7 @@ class Chat {
   Map<String, dynamic> toLocalDatabaseMap() {
     Map<String, dynamic> map = {};
     map['_id'] = id;
-    map['user_id'] = userId;
+    map['user_id'] = user.id;
     return map;
   }
 

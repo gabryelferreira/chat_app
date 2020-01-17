@@ -14,39 +14,6 @@ function formatChatMessageTime(chat) {
 
 class ChatController {
 
-    async getChatByUserId(req, res) {
-        try {
-            const userId = req.params.userId;
-            const myId = req._id;
-
-            const lowerId = userId < myId ? userId : myId;
-            const higherId = userId > myId ? userId : myId;
-
-            let chat = await ChatRepository.getChatByUsersIds({
-                lowerId,
-                higherId
-            });
-
-            if (!chat) {
-                chat = await ChatRepository.create({
-                    lowerId,
-                    higherId
-                });
-                chat = await ChatRepository.getChatById(chat._id);
-            }
-            const formattedChat = formatChatMessageTime(chat);
-            return res.json({
-                chat: formattedChat
-            });
-
-        } catch (err) {
-            return res.json({
-                error: true,
-                errorMessage: "Ocorreu um erro. Tente novamente.",
-                err
-            })
-        }
-    }
     async getChats(req, res) {
         try {
             const myId = req._id;
