@@ -46,6 +46,8 @@ class HomeController extends StateControl with WidgetsBindingObserver {
 
   AppLifecycleState _notification;
 
+  final duration = const Duration(milliseconds: 100);
+
   HomeController({
     @required this.context,
   }) {
@@ -60,20 +62,29 @@ class HomeController extends StateControl with WidgetsBindingObserver {
       disconnectSocket();
     }
     if (state == AppLifecycleState.resumed) {
-      socket.connect();
-      const duration = const Duration(milliseconds: 100);
-      Timer.periodic(duration, (timer) {
-        if (socket.connected) {
-          initSocket();
-          if (timer != null)
-            timer.cancel();
-        }
-      });
+      // socket.connect();
+      connectSocket();
     }
+  }
+
+  connectSocket() {
+    disconnectSocket();
+    socket.connect();
+    Timer.periodic(duration, (timer) {
+      print("socket connected ${socket.connected}");
+      if (socket.connected) {
+        initSocket();
+        if (timer != null) timer.cancel();
+      }
+    });
   }
 
   disconnectSocket() {
     socket.disconnect();
+    inactiveSocketFunctions();
+  }
+
+  inactiveSocketFunctions() {
     socket.off("user-in");
     socket.off("message");
   }
@@ -82,7 +93,7 @@ class HomeController extends StateControl with WidgetsBindingObserver {
     _firebaseMessaging = FirebaseMessaging();
     requestPushNotificationPermission();
     configureFirebaseMessaging();
-    initSocket();
+    connectSocket();
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -93,6 +104,7 @@ class HomeController extends StateControl with WidgetsBindingObserver {
   }
 
   void emitUserIn() async {
+    print("emittinggg");
     User user = await CustomSharedPreferences.getMyUser();
     Map<String, dynamic> json = user.toJson();
     socket.emit("user-in", json);
@@ -102,11 +114,13 @@ class HomeController extends StateControl with WidgetsBindingObserver {
     socket.on("user-in", (_) {
       _loading = false;
       notifyListeners();
+      print("user innnnn");
     });
   }
 
   void onMessage() async {
     socket.on("message", (dynamic data) async {
+      print("message $data");
       Map<String, dynamic> json = data['message'];
       Map<String, dynamic> userJson = json['from'];
       Chat chat = Chat.fromJson({
@@ -114,8 +128,10 @@ class HomeController extends StateControl with WidgetsBindingObserver {
         "user": userJson,
       });
       Message message = Message.fromJson(json);
-      Provider.of<ChatsProvider>(context, listen: false).createChatAndUserIfNotExists(chat);
-      Provider.of<ChatsProvider>(context, listen: false).addMessageToChat(message);
+      Provider.of<ChatsProvider>(context, listen: false)
+          .createChatAndUserIfNotExists(chat);
+      Provider.of<ChatsProvider>(context, listen: false)
+          .addMessageToChat(message);
       await _chatRepository.deleteMessage(message.id);
     });
   }
@@ -178,5 +194,6 @@ class HomeController extends StateControl with WidgetsBindingObserver {
     super.dispose();
     emitUserLeft();
     WidgetsBinding.instance.removeObserver(this);
+    disconnectSocket();
   }
 }
