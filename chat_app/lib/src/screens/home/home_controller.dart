@@ -193,6 +193,7 @@ class HomeController extends StateControl with WidgetsBindingObserver {
   void dispose() {
     super.dispose();
     emitUserLeft();
+    disconnectSocket();
     WidgetsBinding.instance.removeObserver(this);
     disconnectSocket();
   }
