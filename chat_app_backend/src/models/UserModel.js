@@ -18,7 +18,7 @@ const UserSchema = mongoose.Schema({
     fcmToken: String,
     chatId: String,
     createdAt: {
-        type: Date,
+        type: Number,
         default: Date.now
     }
 });

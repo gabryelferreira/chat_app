@@ -1,10 +1,13 @@
 import 'dart:async';
 
+import 'package:chat_app/src/data/local_database/db_provider.dart';
+import 'package:chat_app/src/data/providers/chats_provider.dart';
 import 'package:chat_app/src/screens/home/home_view.dart';
 import 'package:chat_app/src/screens/login/login_view.dart';
 import 'package:chat_app/src/utils/custom_shared_preferences.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AfterLaunchScreen extends StatefulWidget {
   @override
@@ -28,7 +31,14 @@ class _AfterLaunchScreenState extends State<AfterLaunchScreen> {
   @override
   void initState() {
     super.initState();
+    DBProvider.db.database;
     verifyUserLoggedInAndRedirect();
+  }
+
+  @override
+  void didChangeDependencies() {
+    Provider.of<ChatsProvider>(context).updateChats();
+    super.didChangeDependencies();
   }
 
   @override

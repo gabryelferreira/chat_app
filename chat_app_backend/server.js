@@ -4,6 +4,7 @@ const cors = require('cors');
 const mongoDB = require('./src/databases/mongodb/index');
 const socketIO = require('socket.io');
 const shared = require('./src/shared');
+const MessageController = require('./src/controllers/MessageController');
 
 const app = express();
 
@@ -19,8 +20,12 @@ shared.users = users;
 
 io.on('connection', socket => {
     socket.on("user-in", (user) => {
-        users.push({ ...user, socket });
+        const newUser = { ...user, socket };
+        users.push(newUser);
+        console.log("user = ", user);
+        socket.emit("user-in");
         shared.users = users;
+        MessageController.getMessagesAndEmit(newUser);
     });
     
     socket.on("user-left", () => {

@@ -23,6 +23,10 @@ class UserTable {
             name text not null,
             username text not null)
           ''');
+    await db.execute('''
+      CREATE UNIQUE INDEX idx_id_user
+      ON tb_user (_id)
+    ''');
   }
 
 }

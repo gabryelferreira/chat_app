@@ -42,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
             slivers: <Widget>[
               CupertinoSliverNavigationBar(
                 largeTitle: Text(
-                  'Chats',
+                  _homeController.loading ? 'Conectando...' : 'Chats',
                 ),
                 trailing: Material(
                   color: Colors.transparent,
@@ -51,7 +51,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       Icons.exit_to_app,
                       color: Theme.of(context).primaryColor,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      _homeController.logout();
+                    },
                   ),
                 ),
                 backgroundColor: Color(0xFFF8F8F8),
@@ -69,20 +71,20 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget usersList(BuildContext context) {
-    if (_homeController.loading) {
-      return SliverFillRemaining(
-        child: Center(
-          child: CupertinoActivityIndicator(),
-        ),
-      );
-    }
-    if (_homeController.error) {
-      return SliverFillRemaining(
-        child: Center(
-          child: Text('Ocorreu um erro ao buscar suas conversas.'),
-        ),
-      );
-    }
+    // if (_homeController.loading) {
+    //   return SliverFillRemaining(
+    //     child: Center(
+    //       child: CupertinoActivityIndicator(),
+    //     ),
+    //   );
+    // }
+    // if (_homeController.error) {
+    //   return SliverFillRemaining(
+    //     child: Center(
+    //       child: Text('Ocorreu um erro ao buscar suas conversas.'),
+    //     ),
+    //   );
+    // }
     if (_homeController.chats.length == 0) {
       return SliverFillRemaining(
         child: Center(

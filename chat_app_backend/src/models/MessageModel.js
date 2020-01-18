@@ -16,7 +16,7 @@ const MessageSchema = mongoose.Schema({
         required: true,
         ref: 'User',
     },
-    text: {
+    message: {
         type: String,
         required: true,
     },
@@ -26,7 +26,7 @@ const MessageSchema = mongoose.Schema({
         select: false,
     },
     sendAt: {
-        type: Date,
+        type: Number,
         default: Date.now
     }
 });

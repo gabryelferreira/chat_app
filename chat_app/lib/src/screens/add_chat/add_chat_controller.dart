@@ -8,6 +8,7 @@ import 'package:chat_app/src/data/models/user.dart';
 import 'package:chat_app/src/data/providers/chats_provider.dart';
 import 'package:chat_app/src/data/repositories/chat_repository.dart';
 import 'package:chat_app/src/data/repositories/user_repository.dart';
+import 'package:chat_app/src/screens/contact/contact_view.dart';
 import 'package:chat_app/src/utils/state_control.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -61,14 +62,18 @@ class AddChatController extends StateControl {
 
   void newChat(User user) async {
     
-    _showProgressDialog();
+    // _showProgressDialog();
 
     final Chat chat = Chat(
       id: user.chatId,
       user: user,
     );
-    dynamic response = await DBProvider.db.createOrGetChat(chat);
-    print("response = $response");
+    final _provider = Provider.of<ChatsProvider>(context, listen: false);
+    _provider.createUserIfNotExists(chat.user);
+    _provider.createChatIfNotExists(chat);
+    _provider.setSelectedChat(chat);
+    Navigator.of(context).pushNamed(ContactScreen.routeName);
+    // _dismissProgressDialog();
     // Provider.of<ChatsProvider>(context, listen: false).setSelectedChat(chat.id);
     _loading = false;
     notifyListeners();

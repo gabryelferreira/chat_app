@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:chat_app/src/data/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomSharedPreferences {
@@ -35,6 +38,12 @@ class CustomSharedPreferences {
   static Future<void> setBool(String key, bool value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool(key, value);
+  }
+
+  static Future<User> getMyUser() async {
+    final userString = await CustomSharedPreferences.get("user");
+    final userJson = jsonDecode(userString);
+    return User.fromJson(userJson);
   }
 
 }

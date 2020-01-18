@@ -1,14 +1,15 @@
 const Hash = require('../utils/hash');
 const MessageRepository = require('../repositories/MessageRepository');
 const PushNotification = require('./PushNotificationController');
+const shared = require('../shared/index');
 
 class MessageController {
 
     async send(req, res) {
         try {
 
-            const { to, text } = req.body;
-            if (!to || !text) {
+            const { to, message } = req.body;
+            if (!to || !message) {
                 return res.json({
                     error: true,
                     errorMessage: "Dados invalidos"
@@ -20,24 +21,32 @@ class MessageController {
 
             const chatId = Hash(lowerId, higherId);
 
-            const message = await MessageRepository.create({
+            const sentMessage = await MessageRepository.create({
                 chatId,
                 from,
                 to,
-                text
+                message
             });
 
-            await message.populate('from').populate('to').execPopulate();
+            await sentMessage.populate('from').populate('to').execPopulate();
 
-            const myName = message.from.name;
-            const fcmToken = message.to.fcmToken;
+            const myName = sentMessage.from.name;
+            const fcmToken = sentMessage.to.fcmToken;
 
             if (fcmToken) {
-                PushNotification.send(myName, text, fcmToken);
+                PushNotification.send(myName, message, fcmToken);
             }
 
+            const users = shared.users;
+            const findUsers = users.filter(user => user._id == to);
+            findUsers.forEach(user => {
+                user.socket.emit('message', {
+                    message: sentMessage
+                });
+            })
+
             return res.json({
-                message,
+                message: sentMessage,
             })
 
 
@@ -64,6 +73,28 @@ class MessageController {
             return res.json({
                 messages
             })
+
+        } catch (e) {
+            return res.json({
+                error: true,
+                errorMessage: e
+            })
+        }
+    }
+
+    async getMessagesAndEmit(user) {
+        try {
+
+            const myId = user._id;
+
+            const messages = await MessageRepository.get(myId);
+
+            messages.forEach(message => {
+                MessageRepository.setTriedToGet(message._id);
+                user.socket.emit('message', { message });
+            })
+
+            
 
         } catch (e) {
             return res.json({

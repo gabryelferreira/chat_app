@@ -34,6 +34,7 @@ class _ContactScreenState extends State<ContactScreen> {
 
   @override
   void didChangeDependencies() {
+    _contactController.initProvider();
     super.didChangeDependencies();
   }
 
@@ -46,7 +47,7 @@ class _ContactScreenState extends State<ContactScreen> {
             backgroundColor: Color(0xFFEEEEEE),
             appBar: CupertinoNavigationBar(
               middle: Text(
-                'oi',
+                _contactController.selectedChat.user.name,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
@@ -60,9 +61,12 @@ class _ContactScreenState extends State<ContactScreen> {
                     Expanded(
                       child: ListView.builder(
                         reverse: true,
-                        itemCount: _contactController.chat.messages.length,
+                        itemCount: _contactController.selectedChat.messages.length,
                         itemBuilder: (BuildContext context, int index) {
-                          final reverseIndex = _contactController.chat.messages.length - 1 - index;
+                          final reverseIndex =
+                              _contactController.selectedChat.messages.length -
+                                  1 -
+                                  index;
                           return Padding(
                             padding: EdgeInsets.only(
                               left: 15,
@@ -70,7 +74,7 @@ class _ContactScreenState extends State<ContactScreen> {
                               top: 5,
                             ),
                             child: renderMessage(context,
-                                _contactController.chat.messages[reverseIndex]),
+                                _contactController.selectedChat.messages[index]),
                           );
                         },
                       ),
@@ -101,6 +105,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                         controller:
                                             _contactController.textController,
                                         onSubmitted: (_) {
+                                          _contactController.sendMessage();
                                         },
                                         decoration: InputDecoration(
                                           contentPadding:
@@ -121,7 +126,9 @@ class _ContactScreenState extends State<ContactScreen> {
                                 color: Theme.of(context).primaryColor,
                                 borderRadius: BorderRadius.circular(50),
                                 child: InkWell(
-                                  onTap: () {},
+                                  onTap: () {
+                                    _contactController.sendMessage();
+                                  },
                                   borderRadius: BorderRadius.circular(50),
                                   child: Container(
                                     width: 50,
@@ -149,12 +156,13 @@ class _ContactScreenState extends State<ContactScreen> {
   }
 
   Widget renderMessage(BuildContext context, Message message) {
+    if (_contactController.myUser == null) return Container();
     return Column(
       children: <Widget>[
         Material(
           color: Colors.transparent,
           child: Align(
-            alignment: message.userId == 'fuck u'
+            alignment: message.from == _contactController.myUser.id
                 ? Alignment.centerRight
                 : Alignment.centerLeft,
             child: Container(
@@ -167,13 +175,12 @@ class _ContactScreenState extends State<ContactScreen> {
                 margin: EdgeInsets.symmetric(
                   vertical: 2,
                 ),
-                color: message.userId == 'fuck u'
-                    ? Color(0xFFC0CBFF)
-                    : Colors.white,
+                color:
+                    message.from == _contactController.myUser.id ? Color(0xFFC0CBFF) : Colors.white,
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   child: Text(
-                    message.text,
+                    message.message,
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 14.5,

@@ -3,17 +3,17 @@ const ObjectId = require('mongoose').Types.ObjectId;
 
 class MessageRepository {
 
-    async create({ chatId, from, to, text }) {
+    async create({ chatId, from, to, message }) {
         return await Message.create({
             chatId,
             from,
             to,
-            text,
+            message,
         });
     }
 
     async get(userId) {
-        return await Message.find({ to: ObjectId(userId) }).populate('from');
+        return await Message.find({ to: ObjectId(userId) }).populate('from').populate("to");
     }
 
     async setTriedToGet(_id) {

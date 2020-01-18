@@ -16,5 +16,9 @@ class ChatTable {
             user_id text not null,
             constraint tb_chat_user_id_fk foreign key (user_id) references tb_user (_id))
           ''');
+    await db.execute('''
+      create unique index idx_id_chat
+      on tb_chat (_id)
+    ''');
   }
 }

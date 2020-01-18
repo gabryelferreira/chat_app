@@ -29,7 +29,7 @@ class ChatCard extends StatelessWidget {
         onTap: () {
           ChatsProvider _chatsProvider =
               Provider.of<ChatsProvider>(context, listen: false);
-          _chatsProvider.setSelectedChat(chat.id);
+          _chatsProvider.setSelectedChat(chat);
           Navigator.of(context).pushNamed(ContactScreen.routeName);
         },
         child: Padding(
@@ -64,7 +64,7 @@ class ChatCard extends StatelessWidget {
                                       CrossAxisAlignment.stretch,
                                   children: <Widget>[
                                     Text(
-                                      'hey',
+                                      chat.user.name,
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 16,
@@ -75,8 +75,8 @@ class ChatCard extends StatelessWidget {
                                       height: 2,
                                     ),
                                     Text(
-                                      chat.messages[chat.messages.length - 1]
-                                          .text,
+                                      chat.messages[0]
+                                          .message,
                                       style: TextStyle(
                                         fontSize: 12,
                                       ),
@@ -94,7 +94,7 @@ class ChatCard extends StatelessWidget {
                                   children: <Widget>[
                                     Text(
                                       messageDate(chat
-                                          .messages[chat.messages.length - 1]
+                                          .messages[0]
                                           .sendAt),
                                       style: TextStyle(
                                         color: _numberOfUnreadMessagesByMe() > 0 ? Theme.of(context).primaryColor : Colors.grey,

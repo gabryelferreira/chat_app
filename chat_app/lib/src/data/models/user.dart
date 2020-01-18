@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:chat_app/src/utils/custom_shared_preferences.dart';
 import 'package:flutter/material.dart';
 
 class User {

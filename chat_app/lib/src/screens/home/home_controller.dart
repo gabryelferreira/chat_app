@@ -1,11 +1,15 @@
 import 'dart:io';
 
 import 'package:chat_app/src/data/models/chat.dart';
+import 'package:chat_app/src/data/models/custom_error.dart';
+import 'package:chat_app/src/data/models/message.dart';
 import 'package:chat_app/src/data/models/user.dart';
 import 'package:chat_app/src/data/providers/chats_provider.dart';
 import 'package:chat_app/src/data/repositories/chat_repository.dart';
 import 'package:chat_app/src/data/repositories/user_repository.dart';
 import 'package:chat_app/src/screens/add_chat/add_chat_view.dart';
+import 'package:chat_app/src/screens/login/login_view.dart';
+import 'package:chat_app/src/utils/custom_shared_preferences.dart';
 import 'package:chat_app/src/utils/socket_controller.dart';
 import 'package:chat_app/src/utils/state_control.dart';
 import 'package:flutter/material.dart';
@@ -49,10 +53,45 @@ class HomeController extends StateControl {
     _firebaseMessaging = FirebaseMessaging();
     requestPushNotificationPermission();
     configureFirebaseMessaging();
-    this.initializeChatTable();
+    initSocket();
   }
 
-  initializeChatTable() {
+  void initSocket() {
+    emitUserIn();
+    onMessage();
+    onUserIn();
+  }
+
+  void emitUserIn() async {
+    User user = await CustomSharedPreferences.getMyUser();
+    Map<String, dynamic> json = user.toJson();
+    socket.emit("user-in", json);
+  }
+
+  void onUserIn() async {
+    socket.on("user-in", (_) async {
+      _loading = false;
+      notifyListeners();
+    });
+  }
+
+  void onMessage() async {
+    socket.on("message", (dynamic data) async {
+      Map<String, dynamic> json = data['message'];
+      Map<String, dynamic> userJson = json['from'];
+      Chat chat = Chat.fromJson({
+        "_id": json['chatId'],
+        "user": userJson,
+      });
+      Message message = Message.fromJson(json);
+      Provider.of<ChatsProvider>(context, listen: false).createChatAndUserIfNotExists(chat);
+      Provider.of<ChatsProvider>(context, listen: false).addMessageToChat(message);
+      await _chatRepository.deleteMessage(message.id);
+    });
+  }
+
+  void emitUserLeft() async {
+    socket.emit("user-left");
   }
 
   void requestPushNotificationPermission() {
@@ -95,8 +134,18 @@ class HomeController extends StateControl {
     Navigator.of(context).pushNamed(AddChatScreen.routeName);
   }
 
+  void logout() async {
+    emitUserLeft();
+    _userRepository.saveUserFcmToken(null);
+    await CustomSharedPreferences.remove('user');
+    await CustomSharedPreferences.remove('token');
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil(LoginScreen.routeName, (_) => false);
+  }
+
   @override
   void dispose() {
     super.dispose();
+    emitUserLeft();
   }
 }

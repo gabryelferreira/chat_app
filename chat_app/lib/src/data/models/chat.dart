@@ -10,16 +10,23 @@ class Chat {
   String id;
   List<Message> messages;
   User user;
+  int unreadMessages;
+  String lastMessage;
+  int lastMessageSendAt;
 
   Chat({
     @required this.id,
     @required this.user,
-    this.messages,
+    this.messages = const [],
+    this.unreadMessages,
+    this.lastMessage,
+    this.lastMessageSendAt,
   });
 
   Chat.fromJson(Map<String, dynamic> json) {
     id = json['_id'];
     user = User.fromJson(json['user']);
+    messages = [];
   }
 
   Map<String, dynamic> toJson() {
@@ -35,6 +42,10 @@ class Chat {
       'name': map['name'],
       'username': map['username'],
     });
+    messages = [];
+    unreadMessages = map['unread_messages'];
+    lastMessage = map['last_message'];
+    lastMessageSendAt = map['last_message_send_at'];
   }
 
   Map<String, dynamic> toLocalDatabaseMap() {
