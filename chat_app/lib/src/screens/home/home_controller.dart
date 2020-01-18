@@ -48,6 +48,8 @@ class HomeController extends StateControl with WidgetsBindingObserver {
 
   final duration = const Duration(milliseconds: 100);
 
+  bool isSocketConnected = false;
+
   HomeController({
     @required this.context,
   }) {
@@ -73,14 +75,15 @@ class HomeController extends StateControl with WidgetsBindingObserver {
     Timer.periodic(duration, (timer) {
       print("socket connected ${socket.connected}");
       if (socket.connected) {
-        initSocket();
         if (timer != null) timer.cancel();
+        initSocket();
       }
     });
   }
 
   disconnectSocket() {
     socket.disconnect();
+    isSocketConnected = false;
     inactiveSocketFunctions();
   }
 
@@ -98,9 +101,12 @@ class HomeController extends StateControl with WidgetsBindingObserver {
   }
 
   void initSocket() {
-    emitUserIn();
-    onMessage();
-    onUserIn();
+    if (!isSocketConnected) {
+      isSocketConnected = true;
+      emitUserIn();
+      onMessage();
+      onUserIn();
+    }
   }
 
   void emitUserIn() async {
