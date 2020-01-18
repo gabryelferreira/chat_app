@@ -13,20 +13,15 @@ class ChatRepository {
     try {
       var response = await http.get('${MyUrls.serverUrl}/message');
       final List<dynamic> chatsResponse = jsonDecode(response.body)['messages'];
-      // print("chatsResponse = $chatsResponse");
       final List<Chat> chats =
           chatsResponse.map((json) {
-            print("to aqui bb $json");
           Map<String, dynamic> userJson = json['from'];
           final chat = Chat.fromJson({
             "_id": json['chatId'],
             "user": userJson,
           });
-          print("criei o chatt");
           Message message = Message.fromJson(json);
-          print("criei a message ${message.id}");
           chat.messages.add(message);
-          print("chat aqui bbbb ${chat.id}");
           return chat;
           }).toList();
           chats.forEach((chat) {

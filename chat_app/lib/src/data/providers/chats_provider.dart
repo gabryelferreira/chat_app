@@ -25,10 +25,7 @@ class ChatsProvider with ChangeNotifier {
     if (_selectedChat != null) {
       notifyListeners();
       _selectedChat.messages = await DBProvider.db.getChatMessages(selectedChat.id);
-      // notifyListeners();
-      print("messages = ${ _selectedChat.messages.length}");
       _readSelectedChatMessages();
-      // _chatRepository.readChat(_selectedChatId);
     }
   }
 

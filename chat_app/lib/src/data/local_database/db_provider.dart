@@ -48,24 +48,6 @@ class DBProvider {
     });
   }
 
-  Future<Chat> getChat(String id) async {
-    final db = await database;
-    final chats = await db.rawQuery('''
-      SELECT tb_chat._id,
-             tb_user._id as user_id,
-             tb_user.name,
-             tb_user.username
-      FROM tb_chat
-      INNER JOIN tb_user
-        ON tb_chat.user_id = tb_user._id
-        WHERE tb_chat._id = '$id'
-    ''');
-    if (chats.length > 0) {
-      return Chat.fromLocalDatabaseMap(chats.first);
-    }
-    return null;
-  }
-
   Future<User> getUser(String id) async {
     final db = await database;
     final users = await db.rawQuery('''

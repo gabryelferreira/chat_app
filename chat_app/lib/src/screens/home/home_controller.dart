@@ -69,8 +69,7 @@ class HomeController extends StateControl {
   }
 
   void onUserIn() async {
-    socket.on("user-in", (_) async {
-      print("here i am");
+    socket.on("user-in", (_) {
       _loading = false;
       notifyListeners();
     });
@@ -78,7 +77,6 @@ class HomeController extends StateControl {
 
   void onMessage() async {
     socket.on("message", (dynamic data) async {
-      print("dataa $data");
       Map<String, dynamic> json = data['message'];
       Map<String, dynamic> userJson = json['from'];
       Chat chat = Chat.fromJson({
@@ -121,7 +119,6 @@ class HomeController extends StateControl {
       },
     );
     _firebaseMessaging.getToken().then((token) {
-      print("token $token");
       if (token != null) {
         _userRepository.saveUserFcmToken(token);
       }
