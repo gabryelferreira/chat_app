@@ -41,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
           body: CustomScrollView(
             slivers: <Widget>[
               CupertinoSliverNavigationBar(
+                previousPageTitle: '',
                 largeTitle: Text(
                   _homeController.loading ? 'Conectando...' : 'Chats',
                 ),
