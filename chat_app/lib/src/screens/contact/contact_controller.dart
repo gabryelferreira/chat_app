@@ -41,6 +41,7 @@ class ContactController extends StateControl {
 
   initMyUser() async {
     myUser = await getMyUser();
+    notifyListeners();
   }
 
   initProvider() {
