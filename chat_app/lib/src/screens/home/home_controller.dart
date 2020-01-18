@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:chat_app/src/data/models/chat.dart';
@@ -19,7 +20,7 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 
-class HomeController extends StateControl {
+class HomeController extends StateControl with WidgetsBindingObserver {
   ChatRepository _chatRepository = ChatRepository();
 
   UserRepository _userRepository = UserRepository();
@@ -43,10 +44,38 @@ class HomeController extends StateControl {
   List<User> _users = [];
   List<User> get users => _users;
 
+  AppLifecycleState _notification;
+
   HomeController({
     @required this.context,
   }) {
     this.init();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    _notification = state;
+    print("state $state");
+    if (state == AppLifecycleState.inactive) {
+      disconnectSocket();
+    }
+    if (state == AppLifecycleState.resumed) {
+      socket.connect();
+      const duration = const Duration(milliseconds: 100);
+      Timer.periodic(duration, (timer) {
+        if (socket.connected) {
+          initSocket();
+          if (timer != null)
+            timer.cancel();
+        }
+      });
+    }
+  }
+
+  disconnectSocket() {
+    socket.disconnect();
+    socket.off("user-in");
+    socket.off("message");
   }
 
   void init() {
@@ -54,6 +83,7 @@ class HomeController extends StateControl {
     requestPushNotificationPermission();
     configureFirebaseMessaging();
     initSocket();
+    WidgetsBinding.instance.addObserver(this);
   }
 
   void initSocket() {
@@ -147,5 +177,6 @@ class HomeController extends StateControl {
   void dispose() {
     super.dispose();
     emitUserLeft();
+    WidgetsBinding.instance.removeObserver(this);
   }
 }
