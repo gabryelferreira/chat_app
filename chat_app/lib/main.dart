@@ -5,6 +5,7 @@ import 'package:chat_app/src/screens/contact/contact_view.dart';
 import 'package:chat_app/src/screens/home/home_view.dart';
 import 'package:chat_app/src/screens/login/login_view.dart';
 import 'package:chat_app/src/screens/register/register_view.dart';
+import 'package:chat_app/src/widgets/custom_page_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
@@ -35,25 +36,25 @@ class MyApp extends StatelessWidget {
         onGenerateRoute: (RouteSettings settings) {
           switch (settings.name) {
             case '/':
-              return CupertinoPageRoute(
+              return CustomPageRoute.build(
                   builder: (_) => AfterLaunchScreen(), settings: settings);
             case '/login':
-              return CupertinoPageRoute(
+              return CustomPageRoute.build(
                   builder: (_) => LoginScreen(), settings: settings);
             case '/register':
-              return CupertinoPageRoute(
+              return CustomPageRoute.build(
                   builder: (_) => RegisterScreen(), settings: settings);
             case '/home':
-              return CupertinoPageRoute(
+              return CustomPageRoute.build(
                   builder: (_) => HomeScreen(), settings: settings);
             case '/contact':
-              return CupertinoPageRoute(
+              return CustomPageRoute.build(
                   builder: (_) => ContactScreen(), settings: settings);
             case '/add-chat':
-              return CupertinoPageRoute(
+              return CustomPageRoute.build(
                   builder: (_) => AddChatScreen(), settings: settings);
             default:
-              return CupertinoPageRoute(
+              return CustomPageRoute.build(
                   builder: (_) => AfterLaunchScreen(), settings: settings);
           }
         },
