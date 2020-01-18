@@ -16,15 +16,7 @@ class ChatsProvider with ChangeNotifier {
   Chat get selectedChat => _selectedChat;
 
   updateChats() async {
-    List<Chat> newChats = await DBProvider.db.getChatsWithMessages();
-    newChats.sort((a, b) {
-      if (a.messages.length == 0) return 1;
-      if (b.messages.length == 0) return -1;
-      int millisecondsA = a.messages[a.messages.length - 1].sendAt;
-      int millisecondsB = b.messages[b.messages.length - 1].sendAt;
-      return millisecondsA > millisecondsB ? -1 : 1;
-    });
-    _chats = newChats;
+    _chats = await DBProvider.db.getChatsWithMessages();
     notifyListeners();
   }
 

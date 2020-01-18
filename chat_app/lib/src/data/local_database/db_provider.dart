@@ -147,6 +147,7 @@ class DBProvider {
     return id;
   }
 
+  /*
   Future<List<Chat>> getChatsWithMessages() async {
     final db = await database;
     final maps = await db.rawQuery('''
@@ -192,8 +193,7 @@ class DBProvider {
 
     return [];
   }
-
-  /*
+  */
 
   Future<List<Chat>> getChatsWithMessages() async {
     final db = await database;
@@ -203,7 +203,7 @@ class DBProvider {
              tb_user.name,
              tb_user.username,
              (SELECT tb_message.message from tb_message WHERE tb_message.chat_id = tb_chat._id ORDER BY tb_message.send_at DESC LIMIT 1) as last_message,
-             (SELECT COUNT(tb_message.unread_by_me) as count from tb_message WHERE tb_message.chat_id = tb_chat._id) as unread_messages,
+             (SELECT COUNT(tb_message.unread_by_me) as count from tb_message WHERE tb_message.chat_id = tb_chat._id AND tb_message.unread_by_me = 1) as unread_messages,
              (SELECT tb_message.send_at from tb_message WHERE tb_message.chat_id = tb_chat._id ORDER BY tb_message.send_at DESC LIMIT 1) as last_message_send_at
       FROM tb_chat
       INNER JOIN tb_user
@@ -218,53 +218,4 @@ class DBProvider {
     return [];
   }
 
-  */
-
-  // Future<Message> addMessage(Message message) async {
-  //   await db.insert('tb_message', message.toLocalDatabaseMap());
-  //   final chats = await db.rawQuery('''
-  //     SELECT * FROM tb_chat
-  //     INNER JOIN tb_user
-  //       ON tb_chat.user_id = tb_user._id
-  //   ''');
-  //   if (chats.length > 0) {
-  //     chats.forEach((chat) async {
-  //       print("chat = $chat");
-  //       final chatMessages = await db.rawQuery('''
-  //         SELECT * FROM tb_message
-  //         WHERE chat_id = '${message.chatId}'
-  //       ''');
-  //       if (chatMessages.length > 0) {
-  //         print("chatMessages = $chatMessages");
-  //       }
-  //     });
-  //   }
-  //   return message;
-  // }
-
-  // Future<Chat> getChat(String id) async {
-  //   List<Map> maps = await db.query(tableChat,
-  //       columns: [columnId], where: '$columnId = ?', whereArgs: [id]);
-  //   if (maps.length > 0) {
-  //     return Chat.fromLocalDatabaseMap(maps.first);
-  //   }
-  //   return null;
-  // }
-
-  // Future<List<Chat>> getChats() async {
-  //   List<Map> maps = await db.query(tableChat);
-  //   if (maps.length > 0) {
-  //     return maps.map((chat) => Chat.fromLocalDatabaseMap(chat)).toList();
-  //   }
-  //   return [];
-  // }
-
-  // Future<int> delete(String id) async {
-  //   return await db.delete(tableChat, where: '$columnId = ?', whereArgs: [id]);
-  // }
-
-  // Future<int> update(Chat chat) async {
-  //   return await db.update(tableChat, chat.toLocalDatabaseMap(),
-  //       where: '$columnId = ?', whereArgs: [chat.id]);
-  // }
 }

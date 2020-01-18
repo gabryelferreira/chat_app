@@ -92,10 +92,13 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       );
     }
+    // bool theresChatsWithMessages = _homeController.chats.where((chat) {
+    //       return chat.messages.length > 0;
+    //     }).length >
+    //     0;
     bool theresChatsWithMessages = _homeController.chats.where((chat) {
-          return chat.messages.length > 0;
-        }).length >
-        0;
+      return chat.lastMessage != null;
+    }).length > 0;
     if (!theresChatsWithMessages) {
       return SliverFillRemaining(
         child: Center(
@@ -110,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
           (BuildContext context, int index) {
             return Column(
               children: _homeController.chats.map((chat) {
-                if (chat.messages.length == 0) {
+                if (chat.lastMessage == null) {
                   return Container(height: 0, width: 0);
                 }
                 return Column(
