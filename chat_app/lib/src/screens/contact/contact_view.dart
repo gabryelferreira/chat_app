@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:emoji_picker/emoji_picker.dart';
 
 enum MessagePosition { BEFORE, AFTER }
 
@@ -127,6 +128,11 @@ class _ContactScreenState extends State<ContactScreen> {
                     TextFieldWithButton(
                       onSubmit: _contactController.sendMessage,
                       textEditingController: _contactController.textController,
+                      onEmojiTap: (bool showEmojiKeyboard) {
+                        _contactController.showEmojiKeyboard = !showEmojiKeyboard;
+                      },
+                      showEmojiKeyboard: _contactController.showEmojiKeyboard,
+                      context: context,
                     ),
                   ],
                 ),

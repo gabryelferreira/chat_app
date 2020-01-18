@@ -30,6 +30,14 @@ class ContactController extends StateControl {
 
   bool _loading = true;
   bool get loading => _loading;
+  
+  bool _showEmojiKeyboard = false;
+  bool get showEmojiKeyboard => _showEmojiKeyboard;
+
+  set showEmojiKeyboard(bool showEmojiKeyboard) {
+    _showEmojiKeyboard = showEmojiKeyboard;
+    notifyListeners();
+  }
 
   ContactController({
     @required this.context,
