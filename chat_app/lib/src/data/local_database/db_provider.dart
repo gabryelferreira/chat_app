@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:chat_app/src/data/local_database/message_table.dart';
 import 'package:chat_app/src/data/local_database/user_table.dart';
 import 'package:chat_app/src/data/models/chat.dart';
 import 'package:chat_app/src/data/models/message.dart';
 import 'package:chat_app/src/data/models/user.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
 
 import 'chat_table.dart';
 
@@ -26,10 +30,13 @@ class DBProvider {
     _database = await _open();
     return _database;
   }
+  
 
   Future _open() async {
     print("creating db");
-    return await openDatabase('fala_comigo.db', version: 1,
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    String path = join(documentsDirectory.path, "fala_comigo.db");
+    return await openDatabase(path, version: 1,
         onCreate: (Database db, int version) async {
       await UserTable.createTable(db);
       await ChatTable.createTable(db);
@@ -147,7 +154,6 @@ class DBProvider {
     return id;
   }
 
-  /*
   Future<List<Chat>> getChatsWithMessages() async {
     final db = await database;
     final maps = await db.rawQuery('''
@@ -193,29 +199,12 @@ class DBProvider {
 
     return [];
   }
-  */
 
-  Future<List<Chat>> getChatsWithMessages() async {
+  Future<void> clearDatabase() async {
     final db = await database;
-    final maps = await db.rawQuery('''
-      SELECT DISTINCT tb_chat._id,
-             tb_user._id as user_id,
-             tb_user.name,
-             tb_user.username,
-             (SELECT tb_message.message from tb_message WHERE tb_message.chat_id = tb_chat._id ORDER BY tb_message.send_at DESC LIMIT 1) as last_message,
-             (SELECT COUNT(tb_message.unread_by_me) as count from tb_message WHERE tb_message.chat_id = tb_chat._id AND tb_message.unread_by_me = 1) as unread_messages,
-             (SELECT tb_message.send_at from tb_message WHERE tb_message.chat_id = tb_chat._id ORDER BY tb_message.send_at DESC LIMIT 1) as last_message_send_at
-      FROM tb_chat
-      INNER JOIN tb_user
-        ON tb_user._id = tb_chat.user_id
-      ORDER BY last_message_send_at DESC
-    ''');
-    if (maps.length > 0) {
-      List<Chat> chats = maps.map((map) => Chat.fromLocalDatabaseMap(map)).toList();
-      return chats;
-    }
-
-    return [];
+    await db.rawQuery("DELETE FROM tb_message");
+    await db.rawQuery("DELETE FROM tb_chat");
+    await db.rawQuery("DELETE FROM tb_user");
   }
 
 }

@@ -70,6 +70,7 @@ class HomeController extends StateControl {
 
   void onUserIn() async {
     socket.on("user-in", (_) async {
+      print("here i am");
       _loading = false;
       notifyListeners();
     });
@@ -77,6 +78,7 @@ class HomeController extends StateControl {
 
   void onMessage() async {
     socket.on("message", (dynamic data) async {
+      print("dataa $data");
       Map<String, dynamic> json = data['message'];
       Map<String, dynamic> userJson = json['from'];
       Chat chat = Chat.fromJson({
@@ -139,6 +141,7 @@ class HomeController extends StateControl {
     _userRepository.saveUserFcmToken(null);
     await CustomSharedPreferences.remove('user');
     await CustomSharedPreferences.remove('token');
+    _chatsProvider.clearDatabase();
     Navigator.of(context)
         .pushNamedAndRemoveUntil(LoginScreen.routeName, (_) => false);
   }

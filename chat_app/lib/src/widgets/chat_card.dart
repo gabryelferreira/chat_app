@@ -75,7 +75,8 @@ class ChatCard extends StatelessWidget {
                                       height: 2,
                                     ),
                                     Text(
-                                      chat.lastMessage,
+                                      chat.messages[0]
+                                          .message,
                                       style: TextStyle(
                                         fontSize: 12,
                                       ),
@@ -93,7 +94,8 @@ class ChatCard extends StatelessWidget {
                                   children: <Widget>[
                                     Text(
                                       messageDate(chat
-                                          .lastMessageSendAt),
+                                          .messages[0]
+                                          .sendAt),
                                       style: TextStyle(
                                         color: _numberOfUnreadMessagesByMe() > 0 ? Theme.of(context).primaryColor : Colors.grey,
                                         fontSize: 12,
@@ -132,7 +134,7 @@ class ChatCard extends StatelessWidget {
   }
 
   int _numberOfUnreadMessagesByMe() {
-    return chat.unreadMessages;
+    return chat.messages.where((message) => message.unreadByMe).length;
   }
 
   Widget unreadMessages() {
