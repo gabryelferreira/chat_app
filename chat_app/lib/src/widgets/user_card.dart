@@ -30,8 +30,14 @@ class UserCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 CircleAvatar(
-                  backgroundImage: AssetImage('assets/images/contact.jpg'),
+                  child: Text(
+                    user.name[0].toUpperCase(),
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
                   radius: 20,
+                  backgroundColor: Colors.blue,
                 ),
                 Expanded(
                   child: Padding(

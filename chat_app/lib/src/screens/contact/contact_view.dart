@@ -2,9 +2,14 @@ import 'package:chat_app/src/data/models/chat.dart';
 import 'package:chat_app/src/data/models/message.dart';
 import 'package:chat_app/src/data/providers/chats_provider.dart';
 import 'package:chat_app/src/screens/contact/contact_controller.dart';
+import 'package:chat_app/src/utils/dates.dart';
+import 'package:chat_app/src/widgets/text_field_with_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+
+enum MessagePosition { BEFORE, AFTER }
 
 class ContactScreen extends StatefulWidget {
   static final String routeName = "/contact";
@@ -17,6 +22,7 @@ class ContactScreen extends StatefulWidget {
 
 class _ContactScreenState extends State<ContactScreen> {
   ContactController _contactController;
+  final format = new DateFormat("HH:mm");
 
   @override
   void initState() {
@@ -44,15 +50,54 @@ class _ContactScreenState extends State<ContactScreen> {
         stream: _contactController.streamController.stream,
         builder: (context, snapshot) {
           return Scaffold(
-            backgroundColor: Color(0xFFEEEEEE),
             appBar: CupertinoNavigationBar(
-              middle: Text(
-                _contactController.selectedChat.user.name,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
+              padding: EdgeInsetsDirectional.only(end: 0),
+              previousPageTitle:
+                  _contactController.getNumberOfUnreadChatsToString(),
+              middle: GestureDetector(
+                onTap: () {},
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    CircleAvatar(
+                      child: Text(
+                        _contactController.selectedChat.user.name[0]
+                            .toUpperCase(),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
+                      ),
+                      radius: 16,
+                      backgroundColor: Colors.blue,
+                    ),
+                    SizedBox(
+                      width: 7,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          _contactController.selectedChat.user.name,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                        Text(
+                          "@${_contactController.selectedChat.user.username}",
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 10,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-              backgroundColor: Color(0xFFF8F8F8),
+              backgroundColor: Color(0xFFFFFFFF),
             ),
             body: SafeArea(
               child: Container(
@@ -60,92 +105,28 @@ class _ContactScreenState extends State<ContactScreen> {
                   children: <Widget>[
                     Expanded(
                       child: ListView.builder(
+                        padding: EdgeInsets.only(bottom: 5),
                         reverse: true,
-                        itemCount: _contactController.selectedChat.messages.length,
+                        itemCount:
+                            _contactController.selectedChat.messages.length,
                         itemBuilder: (BuildContext context, int index) {
-                          final reverseIndex =
-                              _contactController.selectedChat.messages.length -
-                                  1 -
-                                  index;
                           return Padding(
                             padding: EdgeInsets.only(
-                              left: 15,
-                              right: 15,
+                              left: 10,
+                              right: 10,
                               top: 5,
                             ),
-                            child: renderMessage(context,
-                                _contactController.selectedChat.messages[index]),
+                            child: renderMessage(
+                                context,
+                                _contactController.selectedChat.messages[index],
+                                index),
                           );
                         },
                       ),
                     ),
-                    Material(
-                      color: Colors.transparent,
-                      child: Padding(
-                        padding: const EdgeInsets.all(5),
-                        child: Container(
-                          height: 55,
-                          child: Row(
-                            children: <Widget>[
-                              Expanded(
-                                child: Card(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 25,
-                                    ),
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: TextField(
-                                        autocorrect: false,
-                                        cursorColor:
-                                            Theme.of(context).primaryColor,
-                                        controller:
-                                            _contactController.textController,
-                                        onSubmitted: (_) {
-                                          _contactController.sendMessage();
-                                        },
-                                        decoration: InputDecoration(
-                                          contentPadding:
-                                              EdgeInsets.only(bottom: 0),
-                                          hintText: 'Digite uma mensagem',
-                                          hintStyle: TextStyle(fontSize: 16),
-                                          border: InputBorder.none,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Material(
-                                color: Theme.of(context).primaryColor,
-                                borderRadius: BorderRadius.circular(50),
-                                child: InkWell(
-                                  onTap: () {
-                                    _contactController.sendMessage();
-                                  },
-                                  borderRadius: BorderRadius.circular(50),
-                                  child: Container(
-                                    width: 50,
-                                    height: 50,
-                                    alignment: Alignment.center,
-                                    child: Icon(
-                                      Icons.send,
-                                      color: Colors.white,
-                                      size: 18,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                    TextFieldWithButton(
+                      onSubmit: _contactController.sendMessage,
+                      textEditingController: _contactController.textController,
                     ),
                   ],
                 ),
@@ -155,41 +136,122 @@ class _ContactScreenState extends State<ContactScreen> {
         });
   }
 
-  Widget renderMessage(BuildContext context, Message message) {
+  Widget renderMessage(BuildContext context, Message message, int index) {
     if (_contactController.myUser == null) return Container();
     return Column(
       children: <Widget>[
+        renderMessageSendAtDay(message, index),
         Material(
           color: Colors.transparent,
-          child: Align(
-            alignment: message.from == _contactController.myUser.id
-                ? Alignment.centerRight
-                : Alignment.centerLeft,
-            child: Container(
-              constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width * 0.75),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Card(
-                margin: EdgeInsets.symmetric(
-                  vertical: 2,
+          child: Row(
+            mainAxisAlignment: message.from == _contactController.myUser.id
+                ? MainAxisAlignment.end
+                : MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              renderMessageSendAt(message, MessagePosition.BEFORE),
+              Container(
+                constraints: BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width * 0.75),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  color: message.from == _contactController.myUser.id
+                      ? Colors.blue
+                      : Color(0xFFEEEEEE),
                 ),
-                color:
-                    message.from == _contactController.myUser.id ? Color(0xFFC0CBFF) : Colors.white,
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   child: Text(
                     message.message,
                     style: TextStyle(
-                      color: Colors.black,
+                      color: message.from == _contactController.myUser.id
+                          ? Colors.white
+                          : Colors.black,
                       fontSize: 14.5,
                     ),
                   ),
                 ),
               ),
+              renderMessageSendAt(message, MessagePosition.AFTER),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget renderMessageSendAt(Message message, MessagePosition position) {
+    if (message.from == _contactController.myUser.id &&
+        position == MessagePosition.AFTER) {
+      return Row(
+        children: <Widget>[
+          SizedBox(width: 6),
+          Text(
+            messageDate(message.sendAt),
+            style: TextStyle(color: Colors.grey, fontSize: 10),
+          ),
+        ],
+      );
+    }
+    if (message.from != _contactController.myUser.id &&
+        position == MessagePosition.BEFORE) {
+      return Row(
+        children: <Widget>[
+          Text(
+            messageDate(message.sendAt),
+            style: TextStyle(color: Colors.grey, fontSize: 10),
+          ),
+          SizedBox(width: 6),
+        ],
+      );
+    }
+    return Container(height: 0, width: 0);
+  }
+
+  String messageDate(int milliseconds) {
+    DateTime date = new DateTime.fromMillisecondsSinceEpoch(milliseconds);
+    return format.format(date);
+  }
+
+  Widget renderMessageSendAtDay(Message message, int index) {
+    if (index == _contactController.selectedChat.messages.length - 1) {
+      return getLabelDay(message.sendAt);
+    }
+    final lastMessageSendAt = new DateTime.fromMillisecondsSinceEpoch(
+        _contactController.selectedChat.messages[index + 1].sendAt);
+    final messageSendAt =
+        new DateTime.fromMillisecondsSinceEpoch(message.sendAt);
+    final formatter = UtilDates.formatDay;
+    String formattedLastMessageSendAt = formatter.format(lastMessageSendAt);
+    String formattedMessageSendAt = formatter.format(messageSendAt);
+    if (formattedLastMessageSendAt != formattedMessageSendAt) {
+      return getLabelDay(message.sendAt);
+    }
+    return Container();
+  }
+
+  Widget getLabelDay(int milliseconds) {
+    String day = UtilDates.getSendAtDay(milliseconds);
+    return Column(
+      children: <Widget>[
+        SizedBox(
+          height: 7,
+        ),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(30),
+            color: Color(0xFFC0CBFF),
+          ),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 3),
+            child: Text(
+              day,
+              style: TextStyle(color: Colors.black, fontSize: 12),
             ),
           ),
+        ),
+        SizedBox(
+          height: 7,
         ),
       ],
     );

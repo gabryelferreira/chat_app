@@ -6,6 +6,7 @@ import 'package:chat_app/src/data/models/user.dart';
 import 'package:chat_app/src/data/providers/chats_provider.dart';
 import 'package:chat_app/src/data/repositories/chat_repository.dart';
 import 'package:chat_app/src/utils/custom_shared_preferences.dart';
+import 'package:chat_app/src/utils/dates.dart';
 import 'package:chat_app/src/utils/state_control.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +19,7 @@ class ContactController extends StateControl {
   ChatsProvider _chatsProvider;
 
   Chat get selectedChat => _chatsProvider.selectedChat;
+  List<Chat> get chats => _chatsProvider.chats;
 
   TextEditingController textController = TextEditingController();
 
@@ -55,11 +57,13 @@ class ContactController extends StateControl {
   }
 
   sendMessage() async {
+    UtilDates.getTodayMidnight();
+    final message = textController.text;
+    if (message.length == 0) return;
     final user = await CustomSharedPreferences.getMyUser();
     final myId = user.id;
     final selectedChat = Provider.of<ChatsProvider>(context, listen: false).selectedChat;
     final to = selectedChat.user.id;
-    final message = textController.text;
     final newMessage = Message(
       chatId: selectedChat.id,
       from: myId,
@@ -71,6 +75,17 @@ class ContactController extends StateControl {
     textController.text = "";
     await Provider.of<ChatsProvider>(context, listen: false).addMessageToChat(newMessage);
     await _chatRepository.sendMessage(message, to);
+    
+  }
+
+  String getNumberOfUnreadChatsToString() {
+    final unreadChats = chats.where((chat) {
+      return chat.messages.where((message) => message.unreadByMe).length > 0;
+    }).length;
+    if (unreadChats > 0) {
+      return unreadChats.toString();
+    }
+    return '';
   }
 
   void dispose() {

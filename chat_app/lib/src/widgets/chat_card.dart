@@ -1,10 +1,10 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:chat_app/src/data/models/chat.dart';
-import 'package:chat_app/src/data/models/user.dart';
 import 'package:chat_app/src/data/providers/chats_provider.dart';
 import 'package:chat_app/src/screens/contact/contact_view.dart';
-import 'package:chat_app/src/utils/custom_shared_preferences.dart';
+import 'package:chat_app/src/utils/dates.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -13,9 +13,19 @@ import 'package:provider/provider.dart';
 class ChatCard extends StatelessWidget {
   final Chat chat;
 
-  var format = new DateFormat("HH:mm");
+  final format = new DateFormat("HH:mm");
 
-  String myId;
+  final List<Color> colors = [
+    Colors.red,
+    Colors.blue,
+    Colors.green,
+    Colors.lightBlue,
+    Colors.purple,
+    Colors.black,
+    Colors.cyan,
+  ];
+
+  final rng = new Random();
 
   ChatCard({
     @required this.chat,
@@ -43,14 +53,21 @@ class ChatCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 CircleAvatar(
-                  backgroundImage: AssetImage('assets/images/contact.jpg'),
+                  child: Text(
+                    chat.user.name[0].toUpperCase(),
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
                   radius: 20,
+                  backgroundColor: Colors.blue,
                 ),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(
                       left: 15,
                       bottom: 5,
+                      top: 2,
                     ),
                     child: Container(
                       child: Column(
@@ -75,8 +92,7 @@ class ChatCard extends StatelessWidget {
                                       height: 2,
                                     ),
                                     Text(
-                                      chat.messages[0]
-                                          .message,
+                                      chat.messages[0].message,
                                       style: TextStyle(
                                         fontSize: 12,
                                       ),
@@ -91,13 +107,14 @@ class ChatCard extends StatelessWidget {
                               Padding(
                                 padding: EdgeInsets.only(right: 15, left: 30),
                                 child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   children: <Widget>[
                                     Text(
-                                      messageDate(chat
-                                          .messages[0]
-                                          .sendAt),
+                                      UtilDates.getSendAtDayOrHour(chat.messages[0].sendAt),
                                       style: TextStyle(
-                                        color: _numberOfUnreadMessagesByMe() > 0 ? Theme.of(context).primaryColor : Colors.grey,
+                                        color: _numberOfUnreadMessagesByMe() > 0
+                                            ? Theme.of(context).primaryColor
+                                            : Colors.grey,
                                         fontSize: 12,
                                       ),
                                     ),

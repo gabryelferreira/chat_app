@@ -45,6 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 largeTitle: Text(
                   _homeController.loading ? 'Conectando...' : 'Chats',
                 ),
+                padding: EdgeInsetsDirectional.only(end: 0),
                 trailing: Material(
                   color: Colors.transparent,
                   child: IconButton(
@@ -64,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: _homeController.openAddChatScreen,
-            child: Icon(Icons.add),
+            child: Icon(Icons.message),
           ),
         );
       },
@@ -89,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (_homeController.chats.length == 0) {
       return SliverFillRemaining(
         child: Center(
-          child: Text('Voce nao possui conversas.'),
+          child: Text('Você não possui conversas.'),
         ),
       );
     }
