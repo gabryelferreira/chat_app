@@ -36,62 +36,54 @@ class TextFieldWithButton extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                     child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20.0),
                         color: Colors.white,
-                      ),
-                      child: TextField(
-                        autocorrect: false,
-                        cursorColor: Theme.of(context).primaryColor,
-                        controller: textEditingController,
-                        onSubmitted: (_) {
-                          onSubmit();
-                        },
-                        onTap: () {
-                          if (showEmojiKeyboard) {
-                            onEmojiTap(showEmojiKeyboard);
-                          }
-                        },
-                        decoration: InputDecoration(
-                          // suffixIcon: Icon(Icons.add),
-                          prefixIcon: !Platform.isIOS
-                              ? IconButton(
-                                  icon: Icon(
-                                    Icons.insert_emoticon,
-                                    color: Colors.grey,
-                                  ),
-                                  onPressed: () {
-                                    onEmojiTap(showEmojiKeyboard);
-                                  },
-                                )
-                              : null,
-                          contentPadding: Platform.isIOS
-                              ? EdgeInsets.symmetric(
-                                  vertical: 9.0, horizontal: 15)
-                              : EdgeInsets.symmetric(
-                                  vertical: 9.0, horizontal: 5),
-                          hintText: 'Digite uma mensagem',
-                          hintStyle: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey,
-                          ),
-                          border: new OutlineInputBorder(
-                            borderRadius: const BorderRadius.all(
-                              const Radius.circular(20.0),
-                            ),
-                            borderSide: BorderSide(
-                              color: Colors.grey,
-                              width: 0,
-                            ),
-                          ),
-                          enabledBorder: const OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                color: Color(0xFFDDDDDD), width: 1.0),
-                            borderRadius: const BorderRadius.all(
-                              const Radius.circular(20.0),
-                            ),
-                          ),
+                        border: Border.all(
+                          width: 1,
+                          color: Color(0xFFDDDDDD),
                         ),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          GestureDetector(
+                            onTap: () {
+                              onEmojiTap(showEmojiKeyboard);
+                            },
+                            child: Icon(Icons.insert_emoticon, color: Colors.grey,),
+                          ),
+                          Expanded(
+                            child: TextField(
+                              autocorrect: false,
+                              cursorColor: Theme.of(context).primaryColor,
+                              controller: textEditingController,
+                              onSubmitted: (_) {
+                                onSubmit();
+                              },
+                              onTap: () {
+                                if (showEmojiKeyboard) {
+                                  onEmojiTap(showEmojiKeyboard);
+                                }
+                              },
+                              decoration: InputDecoration(
+                                // suffixIcon: Icon(Icons.add),
+                                contentPadding: Platform.isIOS
+                                    ? EdgeInsets.symmetric(
+                                        vertical: 14.5, horizontal: 15)
+                                    : EdgeInsets.symmetric(
+                                        vertical: 14.5, horizontal: 10),
+                                hintText: 'Digite uma mensagem',
+                                hintStyle: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey,
+                                ),
+                                border: InputBorder.none,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -133,13 +125,13 @@ class TextFieldWithButton extends StatelessWidget {
       FocusScope.of(context).requestFocus(FocusNode());
     }
     if (showEmojiKeyboard && !_keyboardIsVisible()) {
-      
       return EmojiPicker(
         rows: 3,
         columns: 7,
         onEmojiSelected: (emoji, category) {
           final emojiImage = emoji.emoji;
-          textEditingController.text = "${textEditingController.text}$emojiImage";
+          textEditingController.text =
+              "${textEditingController.text}$emojiImage";
         },
       );
     }

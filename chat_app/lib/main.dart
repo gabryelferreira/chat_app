@@ -31,7 +31,6 @@ class MyApp extends StatelessWidget {
         title: 'Fala Comigo',
         theme: ThemeData(
           primaryColor: Colors.blue,
-          hintColor: Colors.blue,
           scaffoldBackgroundColor: Colors.white,
         ),
         initialRoute: '/',
