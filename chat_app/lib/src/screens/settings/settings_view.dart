@@ -1,5 +1,6 @@
 import 'package:chat_app/src/screens/settings/settings_controller.dart';
 import 'package:chat_app/src/widgets/custom_cupertino_sliver_navigation_bar.dart';
+import 'package:chat_app/src/widgets/settings_container.dart';
 import 'package:chat_app/src/widgets/settings_item.dart';
 import 'package:chat_app/src/widgets/user_info_item.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,43 +24,46 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Object>(
-      stream: _settingsController.streamController.stream,
-      builder: (context, snapshot) {
-        return Scaffold(
-          backgroundColor: Color(0xFFEEEEEE),
-          body: CustomScrollView(
-            slivers: <Widget>[
-              CustomCupertinoSliverNavigationBar(
-                largeTitle: Text('Configuracões'),
-              ),
-              SliverFillRemaining(
-                child: ListView(
-                  padding: EdgeInsets.all(0),
-                  children: <Widget>[
-                    renderMyUserCard(),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    SettingsItem(
-                      icon: Icons.delete_outline,
-                      iconBackgroundColor: Colors.grey,
-                      title: 'Apagar conversas',
-                      onTap: _settingsController.openModalDeleteChats,
-                    ),
-                    SettingsItem(
-                      icon: Icons.exit_to_app,
-                      iconBackgroundColor: Colors.red,
-                      title: 'Sair',
-                      onTap: _settingsController.openModalExitApp,
-                    ),
-                  ],
+        stream: _settingsController.streamController.stream,
+        builder: (context, snapshot) {
+          return Scaffold(
+            backgroundColor: Color(0xFFEEEEEE),
+            body: CustomScrollView(
+              slivers: <Widget>[
+                CustomCupertinoSliverNavigationBar(
+                  largeTitle: Text('Configuracões'),
                 ),
-              ),
-            ],
-          ),
-        );
-      }
-    );
+                SliverFillRemaining(
+                  child: ListView(
+                    padding: EdgeInsets.all(0),
+                    children: <Widget>[
+                      renderMyUserCard(),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      SettingsContainer(
+                        children: [
+                          SettingsItem(
+                            icon: Icons.delete_outline,
+                            iconBackgroundColor: Colors.grey,
+                            title: 'Apagar conversas',
+                            onTap: _settingsController.openModalDeleteChats,
+                          ),
+                          SettingsItem(
+                            icon: Icons.exit_to_app,
+                            iconBackgroundColor: Colors.red,
+                            title: 'Sair',
+                            onTap: _settingsController.openModalExitApp,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
   }
 
   Widget renderMyUserCard() {
