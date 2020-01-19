@@ -36,7 +36,7 @@ class TextFieldWithButton extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      padding: EdgeInsets.only(left: 10),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20.0),
                         color: Colors.white,
@@ -48,15 +48,20 @@ class TextFieldWithButton extends StatelessWidget {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          GestureDetector(
-                            onTap: () {
-                              onEmojiTap(showEmojiKeyboard);
-                            },
-                            child: Icon(Icons.insert_emoticon, color: Colors.grey,),
-                          ),
+                          Platform.isIOS
+                              ? null
+                              : GestureDetector(
+                                  onTap: () {
+                                    onEmojiTap(showEmojiKeyboard);
+                                  },
+                                  child: Icon(
+                                    Icons.insert_emoticon,
+                                    color: Colors.grey,
+                                  ),
+                                ),
                           Expanded(
                             child: TextField(
-                              autocorrect: false,
+                              autocorrect: true,
                               cursorColor: Theme.of(context).primaryColor,
                               controller: textEditingController,
                               onSubmitted: (_) {
@@ -67,13 +72,14 @@ class TextFieldWithButton extends StatelessWidget {
                                   onEmojiTap(showEmojiKeyboard);
                                 }
                               },
+                              textAlignVertical: TextAlignVertical.center,
                               decoration: InputDecoration(
                                 // suffixIcon: Icon(Icons.add),
                                 contentPadding: Platform.isIOS
-                                    ? EdgeInsets.symmetric(
-                                        vertical: 14.5, horizontal: 15)
-                                    : EdgeInsets.symmetric(
-                                        vertical: 14.5, horizontal: 10),
+                                    ? EdgeInsets.only(
+                                        bottom: 14, left: 15, right: 4)
+                                    : EdgeInsets.only(
+                                        bottom: 14, left: 10, right: 4),
                                 hintText: 'Digite uma mensagem',
                                 hintStyle: TextStyle(
                                   fontSize: 14,
