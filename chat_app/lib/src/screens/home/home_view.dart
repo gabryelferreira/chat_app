@@ -1,5 +1,6 @@
 import 'package:chat_app/src/screens/home/home_controller.dart';
 import 'package:chat_app/src/widgets/chat_card.dart';
+import 'package:chat_app/src/widgets/custom_cupertino_sliver_navigation_bar.dart';
 import 'package:chat_app/src/widgets/user_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
         return Scaffold(
           body: CustomScrollView(
             slivers: <Widget>[
-              CupertinoSliverNavigationBar(
+              CustomCupertinoSliverNavigationBar(
                 previousPageTitle: '',
                 largeTitle: Text(
                   _homeController.loading ? 'Conectando...' : 'Chats',
@@ -50,15 +51,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Colors.transparent,
                   child: IconButton(
                     icon: Icon(
-                      Icons.exit_to_app,
+                      Icons.settings,
                       color: Theme.of(context).primaryColor,
                     ),
                     onPressed: () {
-                      _homeController.logout();
+                      _homeController.openSettings();
                     },
                   ),
                 ),
-                backgroundColor: Color(0xFFF8F8F8),
               ),
               usersList(context),
             ],
@@ -106,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     }
     return SliverPadding(
-      padding: EdgeInsets.symmetric(vertical: 5),
+      padding: EdgeInsets.symmetric(vertical: 0),
       sliver: SliverList(
         delegate: SliverChildBuilderDelegate(
           (BuildContext context, int index) {

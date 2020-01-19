@@ -66,7 +66,6 @@ class ChatCard extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.only(
                       left: 15,
-                      bottom: 5,
                       top: 2,
                     ),
                     child: Container(
@@ -126,6 +125,9 @@ class ChatCard extends StatelessWidget {
                                 ),
                               ),
                             ],
+                          ),
+                          SizedBox(
+                            height: 5,
                           ),
                           Container(
                             width: double.infinity,

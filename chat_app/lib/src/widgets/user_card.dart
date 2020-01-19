@@ -22,7 +22,7 @@ class UserCard extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.only(
             left: 15,
-            top: 5,
+            top: 10,
             bottom: 0,
           ),
           child: Container(
@@ -44,7 +44,6 @@ class UserCard extends StatelessWidget {
                     padding: const EdgeInsets.only(
                       left: 15,
                       top: 5,
-                      bottom: 5,
                     ),
                     child: Container(
                       child: Column(

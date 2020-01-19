@@ -99,37 +99,49 @@ class _ContactScreenState extends State<ContactScreen> {
                 ),
               ),
               backgroundColor: Color(0xFFFFFFFF),
+              border: Border(
+                bottom: BorderSide(
+                  width: 1,
+                  color: Color(0xFFCCCCCC),
+                ),
+              ),
             ),
             body: SafeArea(
               child: Container(
                 child: Column(
                   children: <Widget>[
                     Expanded(
-                      child: ListView.builder(
-                        padding: EdgeInsets.only(bottom: 5),
-                        reverse: true,
-                        itemCount:
-                            _contactController.selectedChat.messages.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Padding(
-                            padding: EdgeInsets.only(
-                              left: 10,
-                              right: 10,
-                              top: 5,
-                            ),
-                            child: renderMessage(
-                                context,
-                                _contactController.selectedChat.messages[index],
-                                index),
-                          );
-                        },
+                      child: Scrollbar(
+                        child: ListView.builder(
+                          controller: _contactController.scrollController,
+                          padding: EdgeInsets.only(bottom: 5),
+                          reverse: true,
+                          itemCount:
+                              _contactController.selectedChat.messages.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Padding(
+                              padding: EdgeInsets.only(
+                                left: 10,
+                                right: 10,
+                                top: 5,
+                                bottom: 0,
+                              ),
+                              child: renderMessage(
+                                  context,
+                                  _contactController
+                                      .selectedChat.messages[index],
+                                  index),
+                            );
+                          },
+                        ),
                       ),
                     ),
                     TextFieldWithButton(
                       onSubmit: _contactController.sendMessage,
                       textEditingController: _contactController.textController,
                       onEmojiTap: (bool showEmojiKeyboard) {
-                        _contactController.showEmojiKeyboard = !showEmojiKeyboard;
+                        _contactController.showEmojiKeyboard =
+                            !showEmojiKeyboard;
                       },
                       showEmojiKeyboard: _contactController.showEmojiKeyboard,
                       context: context,
@@ -166,7 +178,7 @@ class _ContactScreenState extends State<ContactScreen> {
                       : Color(0xFFEEEEEE),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   child: Text(
                     message.message,
                     style: TextStyle(
@@ -241,7 +253,7 @@ class _ContactScreenState extends State<ContactScreen> {
     return Column(
       children: <Widget>[
         SizedBox(
-          height: 7,
+          height: 4,
         ),
         Container(
           decoration: BoxDecoration(

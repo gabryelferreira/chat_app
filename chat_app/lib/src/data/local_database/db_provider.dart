@@ -11,12 +11,6 @@ import 'package:path/path.dart';
 
 import 'chat_table.dart';
 
-final String tableChat = 'tb_chat';
-final String columnLocalId = 'id_chat';
-final String columnId = '_id';
-final String columnMyId = 'my_id';
-final String columnOtherUserId = 'other_user_id';
-
 class DBProvider {
   DBProvider._();
   static final DBProvider db = DBProvider._();
@@ -112,6 +106,7 @@ class DBProvider {
       FROM tb_message
       WHERE tb_message.chat_id = '$chatId'
       ORDER BY tb_message.send_at DESC
+      LIMIT 25
     ''');
     if (maps.length > 0) {
       return maps
@@ -130,6 +125,30 @@ class DBProvider {
     ''');
   }
 
+  Future<List<Message>> getChatMessagesWithOffset(String chatId, int localMessageId) async {
+    final db = await database;
+    final maps = await db.rawQuery('''
+      SELECT tb_message.id_message,
+             tb_message._id,
+             tb_message.from_user,
+             tb_message.to_user,
+             tb_message.message,
+             tb_message.send_at,
+             tb_message.unread_by_me
+      FROM tb_message
+      WHERE tb_message.chat_id = '$chatId'
+      AND tb_message.id_message < $localMessageId
+      ORDER BY tb_message.send_at DESC
+      LIMIT 25
+    ''');
+    if (maps.length > 0) {
+      return maps
+          .map((message) => Message.fromLocalDatabaseMap(message))
+          .toList();
+    }
+    return [];
+  }
+
   Future<int> addMessage(Message message) async {
     final db = await database;
     final id = await db.insert('tb_message', message.toLocalDatabaseMap());
@@ -143,6 +162,7 @@ class DBProvider {
              tb_user._id as user_id,
              tb_user.name,
              tb_user.username,
+             tb_message.id_message,
              tb_message._id as message_id,
              tb_message.from_user,
              tb_message.to_user,

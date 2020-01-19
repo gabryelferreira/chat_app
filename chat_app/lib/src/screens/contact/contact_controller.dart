@@ -16,6 +16,8 @@ class ContactController extends StateControl {
 
   ChatRepository _chatRepository = ChatRepository();
 
+  ScrollController scrollController;
+
   ChatsProvider _chatsProvider;
 
   Chat get selectedChat => _chatsProvider.selectedChat;
@@ -46,6 +48,7 @@ class ContactController extends StateControl {
   }
 
   void init() {
+    scrollController = new ScrollController()..addListener(_scrollListener);
     initMyUser();
   }
 
@@ -94,6 +97,12 @@ class ContactController extends StateControl {
       return unreadChats.toString();
     }
     return '';
+  }
+
+  void _scrollListener() {
+    if (scrollController.position.extentAfter < 650) {
+      _chatsProvider.loadMoreSelectedChatMessages();
+    }
   }
 
   void dispose() {

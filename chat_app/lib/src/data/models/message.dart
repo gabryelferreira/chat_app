@@ -43,6 +43,7 @@ class Message {
   }
 
   Message.fromLocalDatabaseMap(Map<String, dynamic> json) {
+    localId = json['id_message'];
     id = json['_id'];
     chatId = json['chat_id'];
     message = json['message'];

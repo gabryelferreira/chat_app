@@ -1,4 +1,5 @@
 import 'package:chat_app/src/screens/add_chat/add_chat_controller.dart';
+import 'package:chat_app/src/widgets/custom_cupertino_sliver_navigation_bar.dart';
 import 'package:chat_app/src/widgets/user_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -29,11 +30,10 @@ class _AddChatScreenState extends State<AddChatScreen> {
           return Scaffold(
             body: CustomScrollView(
               slivers: <Widget>[
-                CupertinoSliverNavigationBar(
+                CustomCupertinoSliverNavigationBar(
                   largeTitle: Text(
                     'Usuarios',
                   ),
-                  backgroundColor: Color(0xFFF8F8F8),
                 ),
                 renderUsers(),
               ],
@@ -64,26 +64,23 @@ class _AddChatScreenState extends State<AddChatScreen> {
         ),
       );
     }
-    return SliverPadding(
-      padding: EdgeInsets.only(top: 5),
-      sliver: SliverList(
-        delegate: SliverChildBuilderDelegate(
-          (BuildContext context, int index) {
-            return Column(
-              children: _addChatController.users.map((user) {
-                return Column(
-                  children: <Widget>[
-                    UserCard(
-                      user: user,
-                      onTap: _addChatController.newChat,
-                    ),
-                  ],
-                );
-              }).toList(),
-            );
-          },
-          childCount: 1,
-        ),
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (BuildContext context, int index) {
+          return Column(
+            children: _addChatController.users.map((user) {
+              return Column(
+                children: <Widget>[
+                  UserCard(
+                    user: user,
+                    onTap: _addChatController.newChat,
+                  ),
+                ],
+              );
+            }).toList(),
+          );
+        },
+        childCount: 1,
       ),
     );
   }

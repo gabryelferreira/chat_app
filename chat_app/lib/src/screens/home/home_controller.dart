@@ -185,14 +185,8 @@ class HomeController extends StateControl with WidgetsBindingObserver {
     Navigator.of(context).pushNamed(AddChatScreen.routeName);
   }
 
-  void logout() async {
-    emitUserLeft();
-    _userRepository.saveUserFcmToken(null);
-    await CustomSharedPreferences.remove('user');
-    await CustomSharedPreferences.remove('token');
-    _chatsProvider.clearDatabase();
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil(LoginScreen.routeName, (_) => false);
+  void openSettings() async {
+    Navigator.of(context).pushNamed('/settings');
   }
 
   @override

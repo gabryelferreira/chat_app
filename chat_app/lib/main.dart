@@ -5,10 +5,10 @@ import 'package:chat_app/src/screens/contact/contact_view.dart';
 import 'package:chat_app/src/screens/home/home_view.dart';
 import 'package:chat_app/src/screens/login/login_view.dart';
 import 'package:chat_app/src/screens/register/register_view.dart';
+import 'package:chat_app/src/screens/settings/settings_view.dart';
 import 'package:chat_app/src/widgets/custom_page_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 
@@ -55,6 +55,9 @@ class MyApp extends StatelessWidget {
             case '/add-chat':
               return CustomPageRoute.build(
                   builder: (_) => AddChatScreen(), settings: settings);
+            case '/settings':
+              return CustomPageRoute.build(
+                  builder: (_) => SettingsScreen(), settings: settings);
             default:
               return CustomPageRoute.build(
                   builder: (_) => AfterLaunchScreen(), settings: settings);
