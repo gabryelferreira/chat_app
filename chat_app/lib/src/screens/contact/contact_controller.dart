@@ -109,5 +109,7 @@ class ContactController extends StateControl {
     super.dispose();
     textController.dispose();
     _chatsProvider.setSelectedChat(null);
+    scrollController.removeListener(_scrollListener);
+    scrollController.dispose();
   }
 }
