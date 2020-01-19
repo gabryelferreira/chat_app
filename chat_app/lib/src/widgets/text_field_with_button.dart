@@ -49,7 +49,7 @@ class TextFieldWithButton extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Platform.isIOS
-                              ? null
+                              ? Container()
                               : GestureDetector(
                                   onTap: () {
                                     onEmojiTap(showEmojiKeyboard);
@@ -75,11 +75,11 @@ class TextFieldWithButton extends StatelessWidget {
                               textAlignVertical: TextAlignVertical.center,
                               decoration: InputDecoration(
                                 // suffixIcon: Icon(Icons.add),
-                                contentPadding: Platform.isIOS
-                                    ? EdgeInsets.only(
-                                        bottom: 14, left: 15, right: 4)
-                                    : EdgeInsets.only(
-                                        bottom: 14, left: 10, right: 4),
+                                contentPadding: EdgeInsets.only(
+                                  bottom: 14,
+                                  left: 10,
+                                  right: 4,
+                                ),
                                 hintText: 'Digite uma mensagem',
                                 hintStyle: TextStyle(
                                   fontSize: 14,
