@@ -14,7 +14,6 @@ class PushNotificationController {
                     },
                     priority: 'high',
                     data: {
-                        ...data,
                         click_action: "FLUTTER_NOTIFICATION_CLICK",
                     },
                     to: fcmToken
