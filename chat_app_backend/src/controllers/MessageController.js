@@ -34,7 +34,7 @@ class MessageController {
             const fcmToken = sentMessage.to.fcmToken;
 
             if (fcmToken) {
-                PushNotification.send(myName, message, fcmToken, sentMessage);
+                PushNotification.send(myName, message, fcmToken, { from });
             }
 
             const users = shared.users;
