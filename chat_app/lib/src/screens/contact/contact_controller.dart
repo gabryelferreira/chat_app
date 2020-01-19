@@ -69,7 +69,7 @@ class ContactController extends StateControl {
 
   sendMessage() async {
     UtilDates.getTodayMidnight();
-    final message = textController.text;
+    final message = textController.text.trim();
     if (message.length == 0) return;
     final user = await CustomSharedPreferences.getMyUser();
     final myId = user.id;

@@ -21,6 +21,7 @@ class TextFieldWithButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
         Container(
           decoration: BoxDecoration(
@@ -31,12 +32,12 @@ class TextFieldWithButton extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
             child: Container(
-              height: 40,
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
                   Expanded(
                     child: Container(
-                      padding: EdgeInsets.only(left: 10),
+                      padding: EdgeInsets.only(left: 10, right: 10),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20.0),
                         color: Colors.white,
@@ -60,32 +61,37 @@ class TextFieldWithButton extends StatelessWidget {
                                   ),
                                 ),
                           Expanded(
-                            child: TextField(
-                              autocorrect: true,
-                              cursorColor: Theme.of(context).primaryColor,
-                              controller: textEditingController,
-                              onSubmitted: (_) {
-                                onSubmit();
-                              },
-                              onTap: () {
-                                if (showEmojiKeyboard) {
-                                  onEmojiTap(showEmojiKeyboard);
-                                }
-                              },
-                              textAlignVertical: TextAlignVertical.center,
-                              decoration: InputDecoration(
-                                // suffixIcon: Icon(Icons.add),
-                                contentPadding: EdgeInsets.only(
-                                  bottom: 15,
-                                  left: 10,
-                                  right: 4,
+                            child: Scrollbar(
+                              child: TextField(
+                                autocorrect: true,
+                                maxLines: 5,
+                                minLines: 1,
+                                keyboardType: TextInputType.multiline,
+                                textInputAction: TextInputAction.newline,
+                                cursorColor: Theme.of(context).primaryColor,
+                                controller: textEditingController,
+                                onSubmitted: (_) {
+                                  onSubmit();
+                                },
+                                onTap: () {
+                                  if (showEmojiKeyboard) {
+                                    onEmojiTap(showEmojiKeyboard);
+                                  }
+                                },
+                                decoration: InputDecoration(
+                                  isDense: true,
+                                  // suffixIcon: Icon(Icons.add),
+                                  contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 8,
+                                  ),
+                                  hintText: 'Digite uma mensagem',
+                                  hintStyle: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey,
+                                  ),
+                                  border: InputBorder.none,
                                 ),
-                                hintText: 'Digite uma mensagem',
-                                hintStyle: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey,
-                                ),
-                                border: InputBorder.none,
                               ),
                             ),
                           ),
@@ -105,8 +111,8 @@ class TextFieldWithButton extends StatelessWidget {
                       },
                       borderRadius: BorderRadius.circular(50),
                       child: Container(
-                        width: 40,
-                        height: 40,
+                        width: 35,
+                        height: 35,
                         alignment: Alignment.center,
                         child: Icon(
                           Icons.send,
