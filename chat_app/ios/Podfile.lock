@@ -1,4 +1,6 @@
 PODS:
+  - emoji_picker (0.0.3):
+    - Flutter
   - Firebase/Core (6.14.0):
     - Firebase/CoreOnly
     - FirebaseAnalytics (= 6.1.7)
@@ -99,6 +101,7 @@ PODS:
     - FMDB (~> 2.7.2)
 
 DEPENDENCIES:
+  - emoji_picker (from `.symlinks/plugins/emoji_picker/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
   - flutter_statusbarcolor (from `.symlinks/plugins/flutter_statusbarcolor/ios`)
@@ -127,6 +130,8 @@ SPEC REPOS:
     - Protobuf
 
 EXTERNAL SOURCES:
+  emoji_picker:
+    :path: ".symlinks/plugins/emoji_picker/ios"
   firebase_messaging:
     :path: ".symlinks/plugins/firebase_messaging/ios"
   Flutter:
@@ -145,6 +150,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/sqflite/ios"
 
 SPEC CHECKSUMS:
+  emoji_picker: 0e868059aa18f9473d234f3d0701fbd4d5fd310c
   Firebase: 0219bb4782eb1406f1b9b0628a2e625484ce910d
   firebase_messaging: 73b3e7dd7b3b6a7e4bdac10d5295211ca4f87f90
   FirebaseAnalytics: f68b9f3f1241385129ae0a83b63627fc420c05e5
