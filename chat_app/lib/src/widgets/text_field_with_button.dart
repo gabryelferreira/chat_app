@@ -29,7 +29,7 @@ class TextFieldWithButton extends StatelessWidget {
             ),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(5),
+            padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
             child: Container(
               height: 40,
               child: Row(
@@ -96,7 +96,7 @@ class TextFieldWithButton extends StatelessWidget {
                     ),
                   ),
                   SizedBox(
-                    width: 5,
+                    width: 10,
                   ),
                   Material(
                     color: Theme.of(context).primaryColor,

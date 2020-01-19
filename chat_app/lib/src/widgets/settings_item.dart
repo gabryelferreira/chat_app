@@ -6,13 +6,31 @@ class SettingsItem extends StatelessWidget {
   final Color iconBackgroundColor;
   final IconData icon;
   final String title;
+  final bool border;
 
   SettingsItem({
     @required this.icon,
     @required this.title,
     @required this.onTap,
     @required this.iconBackgroundColor,
+    this.border = true,
   });
+
+  SettingsItem copyWith({
+    Function onTap,
+    Color iconBackgroundColor,
+    IconData icon,
+    String title,
+    bool border,
+  }) {
+    return SettingsItem(
+      onTap: onTap ?? this.onTap,
+      iconBackgroundColor: iconBackgroundColor ?? this.iconBackgroundColor,
+      icon: icon ?? this.icon,
+      title: title ?? this.title,
+      border: border ?? this.border,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +88,7 @@ class SettingsItem extends StatelessWidget {
                           ),
                           Container(
                             width: double.infinity,
-                            height: 1,
+                            height: border ? 1 : 0,
                             color: Color(0xFFDDDDDD),
                           ),
                         ],
