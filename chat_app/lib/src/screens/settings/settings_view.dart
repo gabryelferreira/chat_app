@@ -26,7 +26,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       stream: _settingsController.streamController.stream,
       builder: (context, snapshot) {
         return Scaffold(
-          backgroundColor: Color(0xFFE6E6E6),
+          backgroundColor: Color(0xFFEEEEEE),
           body: CustomScrollView(
             slivers: <Widget>[
               CustomCupertinoSliverNavigationBar(
@@ -44,13 +44,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       icon: Icons.delete_outline,
                       iconBackgroundColor: Colors.grey,
                       title: 'Apagar conversas',
-                      onTap: () {},
+                      onTap: _settingsController.openModalDeleteChats,
                     ),
                     SettingsItem(
                       icon: Icons.exit_to_app,
                       iconBackgroundColor: Colors.red,
                       title: 'Sair',
-                      onTap: () {},
+                      onTap: _settingsController.openModalExitApp,
                     ),
                   ],
                 ),
@@ -66,7 +66,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     if (_settingsController.myUser != null) {
       return UserInfoItem(
         name: _settingsController.myUser.name,
-        subtitle: _settingsController.myUser.username,
+        subtitle: "@${_settingsController.myUser.username}",
       );
     }
     return Container();

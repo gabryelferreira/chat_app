@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:chat_app/src/data/models/custom_error.dart';
 import 'package:chat_app/src/data/models/user.dart';
@@ -17,7 +18,6 @@ import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class SettingsController extends StateControl {
-
   final BuildContext context;
 
   UserRepository _userRepository = UserRepository();
@@ -42,24 +42,90 @@ class SettingsController extends StateControl {
     notifyListeners();
   }
 
-  showAlertDialog(String message) {
-    Widget okButton = FlatButton(
-      child: Text("OK"),
-      onPressed: () {
-        Navigator.pop(context);
-      },
-    );
-    AlertDialog alerta = AlertDialog(
-      title: Text("Verifique os erros"),
-      content: Text(message),
-      actions: [
-        okButton,
-      ],
-    );
+  openModalDeleteChats() {
+    String title = "Apagar conversas";
+    String description =
+        "Tem certeza que desejar excluir suas conversas?";
+    List<Widget> actions = [
+      FlatButton(
+        child: Text(Platform.isIOS ? 'Cancelar' : 'CANCELAR'),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
+      FlatButton(
+        child: Text(
+          Platform.isIOS ? 'Excluir' : 'EXCLUIR',
+          style: TextStyle(color: Platform.isIOS ? Colors.red : Colors.blue),
+        ),
+        onPressed: () {
+          Navigator.pop(context);
+          deleteChats();
+        },
+      ),
+    ];
+    showAlertDialog(title, description, actions);
+  }
+
+  deleteChats() async {
+    await Provider.of<ChatsProvider>(context, listen: false).clearDatabase();
+    String title = "Sucesso";
+    String description = "Suas conversas foram excluidas.";
+    List<Widget> actions = [
+      FlatButton(
+        child: Text(Platform.isIOS ? 'Ok' : 'OK'),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
+    ];
+    showAlertDialog(title, description, actions);
+  }
+
+  openModalExitApp() {
+    String title = "Sair";
+    String description =
+        "Tem certeza que deseja sair? Suas conversas serão perdidas.";
+    List<Widget> actions = [
+      FlatButton(
+        child: Text(Platform.isIOS ? 'Cancelar' : 'CANCELAR'),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
+      FlatButton(
+        child: Text(
+          Platform.isIOS ? 'Sair' : 'SAIR',
+          style: TextStyle(color: Platform.isIOS ? Colors.red : Colors.blue),
+        ),
+        onPressed: () {
+          Navigator.pop(context);
+          logout();
+        },
+      ),
+    ];
+    showAlertDialog(title, description, actions);
+  }
+
+  showAlertDialog(String title, String description, List<Widget> actions) {
+    var alertDialog;
+    if (Platform.isIOS) {
+      alertDialog = CupertinoAlertDialog(
+        title: Text(title),
+        content: Text(description),
+        actions: actions,
+      );
+    } else {
+      alertDialog = AlertDialog(
+        title: Text(title),
+        content: Text(description),
+        actions: actions,
+      );
+    }
     showCupertinoDialog(
       context: context,
       builder: (BuildContext context) {
-        return alerta;
+        return alertDialog;
       },
     );
   }
@@ -73,7 +139,7 @@ class SettingsController extends StateControl {
     _userRepository.saveUserFcmToken(null);
     await CustomSharedPreferences.remove('user');
     await CustomSharedPreferences.remove('token');
-    Provider.of<ChatsProvider>(context).clearDatabase();
+    Provider.of<ChatsProvider>(context, listen: false).clearDatabase();
     Navigator.of(context)
         .pushNamedAndRemoveUntil(LoginScreen.routeName, (_) => false);
   }
@@ -82,5 +148,4 @@ class SettingsController extends StateControl {
   void dispose() {
     super.dispose();
   }
-
 }

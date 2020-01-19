@@ -86,7 +86,7 @@ class ChatsProvider with ChangeNotifier {
     setSelectedChat(selectedChat);
   }
 
-  clearDatabase() async {
+  Future<void> clearDatabase() async {
     await DBProvider.db.clearDatabase();
     updateChats();
   }

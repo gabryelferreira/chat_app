@@ -52,11 +52,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: IconButton(
                     icon: Icon(
                       Icons.settings,
-                      color: Theme.of(context).primaryColor,
+                      color: Colors.black,
                     ),
-                    onPressed: () {
-                      _homeController.openSettings();
-                    },
+                    onPressed: _homeController.openSettings,
                   ),
                 ),
               ),
