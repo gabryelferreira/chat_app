@@ -29,6 +29,7 @@ class UserInfoItem extends StatelessWidget {
       child: Row(
         children: <Widget>[
           CircleAvatar(
+            backgroundColor: Colors.blue,
             radius: 25,
             child: Text(
               name[0],
