@@ -4,7 +4,7 @@ class PushNotificationController {
 
     async send(title, body, fcmToken, data) {
         if (!title || !body || !fcmToken) return;
-        print("data = ", data);
+        console.log("data = ", data);
         try {
             axios.post('https://fcm.googleapis.com/fcm/send',
                 {
