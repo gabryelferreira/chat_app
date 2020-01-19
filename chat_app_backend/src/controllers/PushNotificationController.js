@@ -4,10 +4,6 @@ class PushNotificationController {
 
     async send(title, body, fcmToken, data) {
         if (!title || !body || !fcmToken) return;
-        console.log("data = ", {
-            ...data,
-            click_action: "FLUTTER_NOTIFICATION_CLICK",
-        });
         try {
             axios.post('https://fcm.googleapis.com/fcm/send',
                 {
@@ -17,8 +13,8 @@ class PushNotificationController {
                     },
                     priority: 'high',
                     data: {
+                        ...data,
                         click_action: "FLUTTER_NOTIFICATION_CLICK",
-                        from: data
                     },
                     to: fcmToken
                 },
