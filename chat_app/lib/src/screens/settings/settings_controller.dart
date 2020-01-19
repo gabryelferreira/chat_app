@@ -45,7 +45,7 @@ class SettingsController extends StateControl {
   openModalDeleteChats() {
     String title = "Apagar conversas";
     String description =
-        "Tem certeza que desejar excluir suas conversas?";
+        "Tem certeza que desejar apagar suas conversas? Você não poderá recuperá-las.";
     List<Widget> actions = [
       FlatButton(
         child: Text(Platform.isIOS ? 'Cancelar' : 'CANCELAR'),
