@@ -7,9 +7,10 @@ class CustomPageRoute {
   static PageRoute build({
     Widget Function(BuildContext) builder,
     RouteSettings settings,
+    bool fullscreenDialog = false,
   }) {
     return Platform.isIOS
-        ? CupertinoPageRoute(builder: builder, settings: settings)
-        : MaterialPageRoute(builder: builder, settings: settings);
+        ? CupertinoPageRoute(builder: builder, settings: settings, fullscreenDialog: fullscreenDialog)
+        : MaterialPageRoute(builder: builder, settings: settings, fullscreenDialog: fullscreenDialog);
   }
 }

@@ -38,7 +38,6 @@ class SettingsController extends StateControl {
 
   getMyUser() async {
     myUser = await CustomSharedPreferences.getMyUser();
-    print("myuserrr ${myUser.name}");
     notifyListeners();
   }
 

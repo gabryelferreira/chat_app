@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
                   builder: (_) => ContactScreen(), settings: settings);
             case '/add-chat':
               return CustomPageRoute.build(
-                  builder: (_) => AddChatScreen(), settings: settings);
+                  builder: (_) => AddChatScreen(), settings: settings, fullscreenDialog: true);
             case '/settings':
               return CustomPageRoute.build(
                   builder: (_) => SettingsScreen(), settings: settings);

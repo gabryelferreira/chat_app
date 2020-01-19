@@ -76,7 +76,7 @@ class TextFieldWithButton extends StatelessWidget {
                               decoration: InputDecoration(
                                 // suffixIcon: Icon(Icons.add),
                                 contentPadding: EdgeInsets.only(
-                                  bottom: 14,
+                                  bottom: 15,
                                   left: 10,
                                   right: 4,
                                 ),

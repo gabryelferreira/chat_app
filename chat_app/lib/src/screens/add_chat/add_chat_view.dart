@@ -1,4 +1,5 @@
 import 'package:chat_app/src/screens/add_chat/add_chat_controller.dart';
+import 'package:chat_app/src/widgets/custom_cupertino_navigation_bar.dart';
 import 'package:chat_app/src/widgets/custom_cupertino_sliver_navigation_bar.dart';
 import 'package:chat_app/src/widgets/user_card.dart';
 import 'package:flutter/cupertino.dart';
@@ -30,11 +31,27 @@ class _AddChatScreenState extends State<AddChatScreen> {
           return Scaffold(
             body: CustomScrollView(
               slivers: <Widget>[
-                CustomCupertinoSliverNavigationBar(
-                  largeTitle: Text(
-                    'Usuarios',
+                SliverPersistentHeader(
+                  delegate: CustomCupertinoNavigationBar(
+                    leading: Container(),
+                    trailing: FlatButton(
+                      child: Text(
+                        'Cancelar',
+                        style: TextStyle(color: Colors.blue),
+                      ),
+                      onPressed: _addChatController.closeScreen,
+                    ),
+                    middle: Text('Novo chat')
                   ),
+                  pinned: true,
+                  floating: false,
                 ),
+                // CustomCupertinoSliverNavigationBar(
+                //   previousPageTitle: 'Cancelar',
+                //   largeTitle: Text(
+                //     'Usuarios',
+                //   ),
+                // ),
                 renderUsers(),
               ],
             ),

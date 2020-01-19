@@ -72,7 +72,7 @@ class AddChatController extends StateControl {
     _provider.createUserIfNotExists(chat.user);
     _provider.createChatIfNotExists(chat);
     _provider.setSelectedChat(chat);
-    Navigator.of(context).pushNamed(ContactScreen.routeName);
+    Navigator.of(context).popAndPushNamed(ContactScreen.routeName);
     // _dismissProgressDialog();
     // Provider.of<ChatsProvider>(context, listen: false).setSelectedChat(chat.id);
     _loading = false;
@@ -100,6 +100,10 @@ class AddChatController extends StateControl {
 
   Future<bool> _dismissProgressDialog() {
     return _progressDialog.hide();
+  }
+
+  void closeScreen() {
+    Navigator.of(context).pop();
   }
 
   @override
