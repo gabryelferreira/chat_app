@@ -15,7 +15,7 @@ class PushNotificationController {
                     data: {
                         ...data,
                         click_action: "FLUTTER_NOTIFICATION_CLICK",
-                        sound: "default"
+                        sound: "default",
                     },
                     to: fcmToken
                 },
