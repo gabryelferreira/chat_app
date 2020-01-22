@@ -33,6 +33,7 @@ class MyApp extends StatelessWidget {
           primaryColor: Colors.white,
           accentColor: Colors.blue,
           scaffoldBackgroundColor: Colors.white,
+          cursorColor: Colors.blue,
         ),
         initialRoute: '/',
         onGenerateRoute: (RouteSettings settings) {

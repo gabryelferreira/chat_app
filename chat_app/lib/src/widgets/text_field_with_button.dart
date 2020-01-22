@@ -37,7 +37,9 @@ class TextFieldWithButton extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                     child: Container(
-                      padding: EdgeInsets.only(left: 10, right: 10),
+                      padding: Platform.isIOS
+                          ? EdgeInsets.only(left: 5, right: 5)
+                          : EdgeInsets.only(left: 10, right: 10),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20.0),
                         color: Colors.white,
@@ -66,9 +68,10 @@ class TextFieldWithButton extends StatelessWidget {
                                 autocorrect: true,
                                 maxLines: 5,
                                 minLines: 1,
+                                showCursor: true,
                                 keyboardType: TextInputType.multiline,
                                 textInputAction: TextInputAction.newline,
-                                cursorColor: Theme.of(context).primaryColor,
+                                cursorColor: Theme.of(context).accentColor,
                                 controller: textEditingController,
                                 onSubmitted: (_) {
                                   onSubmit();
