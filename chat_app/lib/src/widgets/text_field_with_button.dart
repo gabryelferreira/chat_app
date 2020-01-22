@@ -103,7 +103,7 @@ class TextFieldWithButton extends StatelessWidget {
                     width: 10,
                   ),
                   Material(
-                    color: Theme.of(context).primaryColor,
+                    color: Theme.of(context).accentColor,
                     borderRadius: BorderRadius.circular(50),
                     child: InkWell(
                       onTap: () {

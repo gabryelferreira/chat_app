@@ -72,6 +72,8 @@ class HomeController extends StateControl with WidgetsBindingObserver {
   connectSocket() {
     disconnectSocket();
     socket.connect();
+    _loading = true;
+    notifyListeners();
     Timer.periodic(duration, (timer) {
       print("socket connected ${socket.connected}");
       if (socket.connected) {

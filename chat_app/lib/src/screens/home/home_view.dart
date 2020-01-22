@@ -1,5 +1,7 @@
 import 'package:chat_app/src/screens/home/home_controller.dart';
+import 'package:chat_app/src/screens/settings/settings_view.dart';
 import 'package:chat_app/src/widgets/chat_card.dart';
+import 'package:chat_app/src/widgets/custom_app_bar.dart';
 import 'package:chat_app/src/widgets/custom_cupertino_sliver_navigation_bar.dart';
 import 'package:chat_app/src/widgets/user_card.dart';
 import 'package:flutter/cupertino.dart';
@@ -39,27 +41,19 @@ class _HomeScreenState extends State<HomeScreen> {
       stream: _homeController.streamController.stream,
       builder: (context, snapshot) {
         return Scaffold(
-          body: CustomScrollView(
-            slivers: <Widget>[
-              CustomCupertinoSliverNavigationBar(
-                previousPageTitle: '',
-                largeTitle: Text(
-                  _homeController.loading ? 'Conectando...' : 'Chats',
-                ),
-                padding: EdgeInsetsDirectional.only(end: 0),
-                trailing: Material(
-                  color: Colors.transparent,
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.settings,
-                      color: Colors.black,
-                    ),
-                    onPressed: _homeController.openSettings,
-                  ),
-                ),
+          appBar: CustomAppBar(
+            title: Text(_homeController.loading ? 'Conectando...' : 'Chats'),
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.settings),
+                onPressed: () {
+                  Navigator.of(context).pushNamed(SettingsScreen.routeName);
+                },
               ),
-              usersList(context),
             ],
+          ),
+          body: SafeArea(
+            child: usersList(context),
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: _homeController.openAddChatScreen,
@@ -86,10 +80,8 @@ class _HomeScreenState extends State<HomeScreen> {
     //   );
     // }
     if (_homeController.chats.length == 0) {
-      return SliverFillRemaining(
-        child: Center(
-          child: Text('Você não possui conversas.'),
-        ),
+      return Center(
+        child: Text('Você não possui conversas.'),
       );
     }
     bool theresChatsWithMessages = _homeController.chats.where((chat) {
@@ -97,35 +89,28 @@ class _HomeScreenState extends State<HomeScreen> {
         }).length >
         0;
     if (!theresChatsWithMessages) {
-      return SliverFillRemaining(
-        child: Center(
-          child: Text('Voce nao possui conversas.'),
-        ),
+      return Center(
+        child: Text('Voce nao possui conversas.'),
       );
     }
-    return SliverPadding(
-      padding: EdgeInsets.symmetric(vertical: 0),
-      sliver: SliverList(
-        delegate: SliverChildBuilderDelegate(
-          (BuildContext context, int index) {
+    return ListView.builder(
+      itemCount: 1,
+      itemBuilder: (BuildContext context, int index) {
+        return Column(
+          children: _homeController.chats.map((chat) {
+            if (chat.messages.length == 0) {
+              return Container(height: 0, width: 0);
+            }
             return Column(
-              children: _homeController.chats.map((chat) {
-                if (chat.messages.length == 0) {
-                  return Container(height: 0, width: 0);
-                }
-                return Column(
-                  children: <Widget>[
-                    ChatCard(
-                      chat: chat,
-                    ),
-                  ],
-                );
-              }).toList(),
+              children: <Widget>[
+                ChatCard(
+                  chat: chat,
+                ),
+              ],
             );
-          },
-          childCount: 1,
-        ),
-      ),
+          }).toList(),
+        );
+      },
     );
   }
 }

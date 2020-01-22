@@ -30,24 +30,25 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Fala Comigo',
         theme: ThemeData(
-          primaryColor: Colors.blue,
+          primaryColor: Colors.white,
+          accentColor: Colors.blue,
           scaffoldBackgroundColor: Colors.white,
         ),
         initialRoute: '/',
         onGenerateRoute: (RouteSettings settings) {
           switch (settings.name) {
             case '/':
-              return CustomPageRoute.build(
-                  builder: (_) => AfterLaunchScreen(), settings: settings);
+              return PageRouteBuilder(
+                  pageBuilder: (_, a1, a2) => AfterLaunchScreen(), settings: settings);
             case '/login':
-              return CustomPageRoute.build(
-                  builder: (_) => LoginScreen(), settings: settings);
+              return PageRouteBuilder(
+                  pageBuilder: (_, a1, a2) => LoginScreen(), settings: settings);
             case '/register':
               return CustomPageRoute.build(
                   builder: (_) => RegisterScreen(), settings: settings);
             case '/home':
-              return CustomPageRoute.build(
-                  builder: (_) => HomeScreen(), settings: settings);
+              return PageRouteBuilder(
+                  pageBuilder: (_, a1, a2) => HomeScreen(), settings: settings);
             case '/contact':
               return CustomPageRoute.build(
                   builder: (_) => ContactScreen(), settings: settings);

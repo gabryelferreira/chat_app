@@ -3,6 +3,7 @@ import 'package:chat_app/src/data/models/message.dart';
 import 'package:chat_app/src/data/providers/chats_provider.dart';
 import 'package:chat_app/src/screens/contact/contact_controller.dart';
 import 'package:chat_app/src/utils/dates.dart';
+import 'package:chat_app/src/widgets/custom_app_bar.dart';
 import 'package:chat_app/src/widgets/text_field_with_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -51,11 +52,8 @@ class _ContactScreenState extends State<ContactScreen> {
         stream: _contactController.streamController.stream,
         builder: (context, snapshot) {
           return Scaffold(
-            appBar: CupertinoNavigationBar(
-              padding: EdgeInsetsDirectional.only(end: 0),
-              previousPageTitle:
-                  _contactController.getNumberOfUnreadChatsToString(),
-              middle: GestureDetector(
+            appBar: CustomAppBar(
+              title: GestureDetector(
                 onTap: () {},
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -96,13 +94,6 @@ class _ContactScreenState extends State<ContactScreen> {
                       ],
                     ),
                   ],
-                ),
-              ),
-              backgroundColor: Color(0xFFFFFFFF),
-              border: Border(
-                bottom: BorderSide(
-                  width: 1,
-                  color: Color(0xFFCCCCCC),
                 ),
               ),
             ),
