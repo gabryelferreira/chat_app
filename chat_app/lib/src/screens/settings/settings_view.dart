@@ -30,7 +30,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           return Scaffold(
             backgroundColor: Color(0xFFEEEEEE),
             appBar: CustomAppBar(
-              title: Text('Configurações'),
+              title: Text('Configurações', style: TextStyle(color: Colors.black)),
             ),
             body: SafeArea(
               child: Container(

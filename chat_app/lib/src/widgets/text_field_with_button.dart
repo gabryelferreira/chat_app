@@ -71,7 +71,7 @@ class TextFieldWithButton extends StatelessWidget {
                                 showCursor: true,
                                 keyboardType: TextInputType.multiline,
                                 textInputAction: TextInputAction.newline,
-                                cursorColor: Theme.of(context).accentColor,
+                                cursorColor: Theme.of(context).primaryColor,
                                 controller: textEditingController,
                                 onSubmitted: (_) {
                                   onSubmit();
@@ -106,7 +106,7 @@ class TextFieldWithButton extends StatelessWidget {
                     width: 10,
                   ),
                   Material(
-                    color: Theme.of(context).accentColor,
+                    color: Theme.of(context).primaryColor,
                     borderRadius: BorderRadius.circular(50),
                     child: InkWell(
                       onTap: () {

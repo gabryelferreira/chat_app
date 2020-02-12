@@ -30,10 +30,16 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Fala Comigo',
         theme: ThemeData(
-          primaryColor: Colors.white,
-          accentColor: Colors.blue,
+          primaryColor: Colors.blue,
+          accentColor: Colors.white,
           scaffoldBackgroundColor: Colors.white,
           cursorColor: Colors.blue,
+          appBarTheme: AppBarTheme().copyWith(
+            iconTheme: IconThemeData(color: Colors.black),
+            textTheme: TextTheme().copyWith(
+              title: Theme.of(context).primaryTextTheme.title.copyWith(color: Colors.black)
+            )
+          )
         ),
         initialRoute: '/',
         onGenerateRoute: (RouteSettings settings) {

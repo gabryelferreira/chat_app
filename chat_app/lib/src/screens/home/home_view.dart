@@ -57,7 +57,11 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: _homeController.openAddChatScreen,
-            child: Icon(Icons.message),
+            backgroundColor: Theme.of(context).primaryColor,
+            child: Icon(
+              Icons.message,
+              color: Theme.of(context).accentColor,
+            ),
           ),
         );
       },
