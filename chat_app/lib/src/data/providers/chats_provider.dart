@@ -45,9 +45,6 @@ class ChatsProvider with ChangeNotifier {
         _noMoreSelectedChatMessages = true;
         return;
       }
-      // newMessages.forEach((message) {
-      //   print("messageee ${message.toJson()}");
-      // });
       _selectedChat.messages = _selectedChat.messages + newMessages;
       _loadingMoreMessages = false;
       notifyListeners();

@@ -112,7 +112,6 @@ class HomeController extends StateControl with WidgetsBindingObserver {
   }
 
   void emitUserIn() async {
-    print("emittinggg");
     User user = await CustomSharedPreferences.getMyUser();
     Map<String, dynamic> json = user.toJson();
     socket.emit("user-in", json);
@@ -122,7 +121,6 @@ class HomeController extends StateControl with WidgetsBindingObserver {
     socket.on("user-in", (_) {
       _loading = false;
       notifyListeners();
-      print("user innnnn");
     });
   }
 
